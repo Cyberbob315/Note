@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Note</string>
+    <string name="today">Today</string>
+    <string name="tomorrow">Tomorrow</string>
+    <string name="next">Next </string>
+    <string name="other">Other...</string>
+</resources>

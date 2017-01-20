@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@color/light_grey">
+
+    <ImageView
+        android:id="@+id/iv_color_white"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:src="@color/white"
+        android:background="?attr/selectableItemBackground"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:layout_height="match_parent" />
+    <ImageView
+        android:id="@+id/iv_color_red"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:src="@color/colorRed"
+        android:background="?attr/selectableItemBackground"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:layout_height="100dp" />
+    <ImageView
+        android:id="@+id/iv_color_blue"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:src="@color/blue"
+        android:background="?attr/selectableItemBackground"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:layout_height="match_parent" />
+    <ImageView
+        android:id="@+id/iv_color_yellow"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:src="@color/yellow"
+        android:background="?attr/selectableItemBackground"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:layout_height="match_parent" />
+    <ImageView
+        android:id="@+id/iv_color_green"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:src="@color/green"
+        android:background="?attr/selectableItemBackground"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:layout_height="match_parent" />
+
+</LinearLayout>
