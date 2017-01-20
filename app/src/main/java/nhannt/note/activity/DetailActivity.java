@@ -238,6 +238,10 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                 setToNotify();
                 break;
             case R.id.bt_new_note_menu:
+                Intent intent = new Intent(this, DetailActivity.class);
+                intent.putExtra(DetailActivity.KEY_IS_CREATE_NEW, true);
+                intent.putExtra(DetailActivity.KEY_LAST_NOTE_ID, lastNoteId);
+                startActivity(intent);
                 break;
             case android.R.id.home:
                 onBackPressed();
@@ -255,11 +259,11 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         Common.writeLog("Notify:" + notifyDateTime);
         if (isCreateNew) {
             itemNoteToNotify = new Note(lastNoteId + 1, etTitle.getText().toString(), etContent.getText().toString(),
-                    ContextCompat.getColor(DetailActivity.this,selectedColor),
+                    ContextCompat.getColor(DetailActivity.this, selectedColor),
                     createdDateTime, notifyDateTime);
         } else {
             itemNoteToNotify = new Note(itemNote.getId(), etTitle.getText().toString(), etContent.getText().toString(),
-                    ContextCompat.getColor(DetailActivity.this,selectedColor),
+                    ContextCompat.getColor(DetailActivity.this, selectedColor),
                     createdDateTime, notifyDateTime);
         }
         intentToAlarmClass.putExtra(AlarmReceiver.KEY_NOTE_TO_NOTIFY, itemNoteToNotify);
@@ -437,6 +441,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                 saveImageToDatabase(itemNote.getId(), lstImagePath.get(i));
             }
         }
+        onBackPressed();
     }
 
     private void saveImageToDatabase(int noteId, String path) {
