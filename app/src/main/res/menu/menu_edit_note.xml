@@ -5,22 +5,27 @@
         android:id="@+id/bt_choose_picture_menu"
         android:icon="@drawable/ic_camera"
         android:title="Image"
-        app:showAsAction="always">
-    </item>
+        app:showAsAction="always"></item>
     <item
         android:id="@+id/bt_choose_color_menu"
         android:icon="@drawable/ic_color_selector"
         android:title="Image"
-        app:showAsAction="always">
-    </item>
+        app:showAsAction="always"></item>
     <item
         android:id="@+id/bt_done_menu"
         android:icon="@drawable/ic_check"
         android:title="Image"
-        app:showAsAction="always">
-    </item>
+        app:showAsAction="always"></item>
     <item
+        android:icon="@drawable/ic_add_new"
         android:id="@+id/bt_new_note_menu"
-        android:title="New Note">
-    </item>
+        android:title="New Note"></item>
+    <item
+        android:icon="@drawable/ic_share"
+        android:id="@+id/bt_share_menu"
+        android:title="Share" />
+    <item
+        android:icon="@drawable/ic_trash_can"
+        android:id="@+id/bt_delete_menu"
+        android:title="Delete" />
 </menu>

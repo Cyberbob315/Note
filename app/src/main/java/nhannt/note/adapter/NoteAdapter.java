@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import nhannt.note.R;
 import nhannt.note.activity.DetailActivity;
 import nhannt.note.model.Note;
+import nhannt.note.utils.Common;
+import nhannt.note.utils.Constant;
 
 /**
  * Created by IceMan on 12/30/2016.
@@ -43,6 +45,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
         holder.tvNoteTitle.setText(mData.get(position).getTitle());
         holder.tvNoteContent.setText(mData.get(position).getContent());
         holder.cardView.setCardBackgroundColor(mData.get(position).getColor());
+        holder.tvNoteDate.setText(Common.getDateStrFromMilliseconds(mData.get(position).getCreatedDate(),"yyyy-MM-dd"));
         holder.pos = position;
     }
 
@@ -56,14 +59,14 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
         int pos;
         TextView tvNoteTitle;
         TextView tvNoteContent;
-        TextView tvNoteNotifyDate;
+        TextView tvNoteDate;
         CardView cardView;
 
         public NoteViewHolder(View itemView) {
             super(itemView);
             tvNoteContent = (TextView) itemView.findViewById(R.id.tv_content_note_item);
             tvNoteTitle = (TextView) itemView.findViewById(R.id.tv_title_note_item);
-            tvNoteNotifyDate = (TextView) itemView.findViewById(R.id.tv_date_time_item);
+            tvNoteDate = (TextView) itemView.findViewById(R.id.tv_date_time_item);
             cardView = (CardView) itemView.findViewById(R.id.card_view_note);
             itemView.setOnClickListener(this);
         }
@@ -71,8 +74,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(mContext, DetailActivity.class);
-            intent.putExtra(DetailActivity.KEY_IS_CREATE_NEW, false);
-            intent.putExtra(DetailActivity.KEY_NOTE, mData.get(this.pos));
+            intent.putExtra(Constant.KEY_LIST_NOTE, mData);
+            intent.putExtra(Constant.KEY_NOTE_POSITION, pos);
             mContext.startActivity(intent);
         }
     }

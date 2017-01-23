@@ -30,6 +30,7 @@ import nhannt.note.adapter.NoteAdapter;
 import nhannt.note.database.NoteDatabase;
 import nhannt.note.model.Note;
 import nhannt.note.utils.Common;
+import nhannt.note.utils.Constant;
 import nhannt.note.utils.GridSpacingItemDecoration;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
@@ -38,7 +39,6 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final int PERMISSION_REQUEST_CODE = 200;
-    public static final String ACTION_REFRESH_LIST = "nhannt.note.ACTION_REFRESH_LIST";
 
     private Toolbar toolbar;
     RecyclerView rvListNote;
@@ -60,7 +60,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         if (Common.isMarshMallow()) {
             if (!checkPermission()) {
                 requestPermission();
-            }else{
+            } else {
                 doMainWork();
             }
         } else {
@@ -103,12 +103,11 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab_add_new_note:
-                Intent intent = new Intent(HomeActivity.this, DetailActivity.class);
-                intent.putExtra(DetailActivity.KEY_IS_CREATE_NEW, true);
+                Intent intent = new Intent(HomeActivity.this, NewActivity.class);
                 if (mListNote != null && mListNote.size() > 0) {
-                    intent.putExtra(DetailActivity.KEY_LAST_NOTE_ID, mListNote.get(mListNote.size() - 1).getId());
+                    intent.putExtra(Constant.KEY_LAST_NOTE_ID, mListNote.get(mListNote.size() - 1).getId());
                 } else {
-                    intent.putExtra(DetailActivity.KEY_LAST_NOTE_ID, 0);
+                    intent.putExtra(Constant.KEY_LAST_NOTE_ID, 0);
                 }
                 startActivity(intent);
                 break;
@@ -149,7 +148,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 int color = result.getInt(result.getColumnIndex(NoteDatabase.TBL_NOTE_COLUMN_NOTE_COLOR));
                 long createdDateTime = result.getLong(result.getColumnIndex(NoteDatabase.TBL_NOTE_COLUMN_CREATED_TIME));
                 long notifyDateTime = result.getLong(result.getColumnIndex(NoteDatabase.TBL_NOTE_COLUMN_NOTIFY_TIME));
-                Note note = new Note(id, title, content, color,createdDateTime, notifyDateTime);
+                Note note = new Note(id, title, content, color, createdDateTime, notifyDateTime);
                 lstNote.add(note);
             } while (result.moveToNext());
         }
@@ -181,10 +180,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                     if (writeAccepted && readAccepted) {
                         doMainWork();
                     } else {
-                        Toast.makeText(this, "Permission Denied, You cannot access database", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, getString(R.string.permission_denied), Toast.LENGTH_SHORT).show();
                         if (ActivityCompat.shouldShowRequestPermissionRationale(this, WRITE_EXTERNAL_STORAGE) ||
                                 ActivityCompat.shouldShowRequestPermissionRationale(this, READ_EXTERNAL_STORAGE)) {
-                            showMessageOKCancel("You need to allow access to the permissions",
+                            showMessageOKCancel(getString(R.string.ask_permission),
                                     new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
@@ -201,11 +200,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
         new AlertDialog.Builder(HomeActivity.this)
                 .setMessage(message)
-                .setPositiveButton("OK", okListener)
-                .setNegativeButton("Cancel", null)
+                .setPositiveButton(getString(R.string.btn_ok), okListener)
+                .setNegativeButton(getString(R.string.btn_cancel), null)
                 .create()
                 .show();
     }
+
     BroadcastReceiver broadcastReceiverRefresh = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -213,13 +213,13 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         }
     };
 
-    private void registerBroadcastRefresh(){
+    private void registerBroadcastRefresh() {
         IntentFilter filter = new IntentFilter();
-        filter.addAction(ACTION_REFRESH_LIST);
-        registerReceiver(broadcastReceiverRefresh,filter);
+        filter.addAction(Constant.ACTION_REFRESH_LIST);
+        registerReceiver(broadcastReceiverRefresh, filter);
     }
 
-    private void unregisterBroadcastRefresh(){
+    private void unregisterBroadcastRefresh() {
         unregisterReceiver(broadcastReceiverRefresh);
     }
 

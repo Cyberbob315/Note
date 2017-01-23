@@ -11,7 +11,7 @@
         android:layout_weight="1"
         android:src="@color/white"
         android:background="?attr/selectableItemBackground"
-        android:padding="@dimen/activity_horizontal_margin"
+        android:padding="@dimen/padding_color_chooser"
         android:layout_height="match_parent" />
     <ImageView
         android:id="@+id/iv_color_red"
@@ -19,7 +19,7 @@
         android:layout_weight="1"
         android:src="@color/colorRed"
         android:background="?attr/selectableItemBackground"
-        android:padding="@dimen/activity_horizontal_margin"
+        android:padding="@dimen/padding_color_chooser"
         android:layout_height="100dp" />
     <ImageView
         android:id="@+id/iv_color_blue"
@@ -27,7 +27,7 @@
         android:layout_weight="1"
         android:src="@color/blue"
         android:background="?attr/selectableItemBackground"
-        android:padding="@dimen/activity_horizontal_margin"
+        android:padding="@dimen/padding_color_chooser"
         android:layout_height="match_parent" />
     <ImageView
         android:id="@+id/iv_color_yellow"
@@ -35,7 +35,7 @@
         android:layout_weight="1"
         android:src="@color/yellow"
         android:background="?attr/selectableItemBackground"
-        android:padding="@dimen/activity_horizontal_margin"
+        android:padding="@dimen/padding_color_chooser"
         android:layout_height="match_parent" />
     <ImageView
         android:id="@+id/iv_color_green"
@@ -43,7 +43,7 @@
         android:layout_weight="1"
         android:src="@color/green"
         android:background="?attr/selectableItemBackground"
-        android:padding="@dimen/activity_horizontal_margin"
+        android:padding="@dimen/padding_color_chooser"
         android:layout_height="match_parent" />
 
 </LinearLayout>

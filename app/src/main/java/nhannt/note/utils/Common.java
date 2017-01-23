@@ -25,10 +25,10 @@ import static android.content.Context.MODE_PRIVATE;
  */
 
 public class Common {
-    private static final String TAG="NhanNT";
+    private static final String TAG = "NhanNT";
 
-    public static void writeLog(String content){
-        Log.d(TAG,content);
+    public static void writeLog(String tag, String content) {
+        Log.d(TAG + ": " + tag, content);
     }
 
 

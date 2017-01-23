@@ -21,7 +21,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Take photos" />
+            android:text="@string/take_photo" />
     </LinearLayout>
 
     <LinearLayout
@@ -40,7 +40,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Choose from gallery" />
+            android:text="@string/choose_photo" />
     </LinearLayout>
 
 

@@ -10,8 +10,8 @@
     <ImageView
         android:id="@+id/bt_delete_image_item"
         android:src="@drawable/ic_close"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="@dimen/delete_photo_btn_height_width"
+        android:layout_height="@dimen/delete_photo_btn_height_width"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"/>
 </nhannt.note.base.SquareRelativeLayout>
