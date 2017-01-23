@@ -25,9 +25,9 @@ import nhannt.note.activity.NewActivity;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {
 
-    Context mContext;
-    ArrayList<String> mData;
-    LayoutInflater mLayoutInflater;
+    private Context mContext;
+    private ArrayList<String> mData;
+    private LayoutInflater mLayoutInflater;
 
     public ImageAdapter(Context mContext, ArrayList<String> mData) {
         this.mContext = mContext;
