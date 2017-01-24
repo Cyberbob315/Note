@@ -29,6 +29,7 @@ import nhannt.note.R;
 import nhannt.note.adapter.NoteAdapter;
 import nhannt.note.database.NoteDatabase;
 import nhannt.note.model.Note;
+import nhannt.note.utils.AppController;
 import nhannt.note.utils.Common;
 import nhannt.note.utils.Constant;
 import nhannt.note.utils.GridSpacingItemDecoration;
@@ -103,7 +104,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab_add_new_note:
-                Intent intent = new Intent(HomeActivity.this, NewActivity.class);
+                Intent intent = new Intent(HomeActivity.this, HostActivity.class);
                 if (mListNote != null && mListNote.size() > 0) {
                     intent.putExtra(Constant.KEY_LAST_NOTE_ID, mListNote.get(mListNote.size() - 1).getId());
                 } else {
@@ -124,7 +125,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         protected Void doInBackground(Void... params) {
-            mListNote = getListNote();
+            mListNote = AppController.getInstance().getListNote();
             return null;
         }
 
@@ -137,23 +138,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private ArrayList<Note> getListNote() {
-        Cursor result = mNoteDatabase.rawQuery(NoteDatabase.QUERY_GET_ALL_NOTE);
-        ArrayList<Note> lstNote = new ArrayList<>();
-        if (result != null && result.moveToFirst()) {
-            do {
-                int id = result.getInt(result.getColumnIndex(NoteDatabase.TBL_NOTE_COLUMN_ID));
-                String title = result.getString(result.getColumnIndex(NoteDatabase.TBL_NOTE_COLUMN_NOTE_TITLE));
-                String content = result.getString(result.getColumnIndex(NoteDatabase.TBL_NOTE_COLUMN_NOTE_CONTENT));
-                int color = result.getInt(result.getColumnIndex(NoteDatabase.TBL_NOTE_COLUMN_NOTE_COLOR));
-                long createdDateTime = result.getLong(result.getColumnIndex(NoteDatabase.TBL_NOTE_COLUMN_CREATED_TIME));
-                long notifyDateTime = result.getLong(result.getColumnIndex(NoteDatabase.TBL_NOTE_COLUMN_NOTIFY_TIME));
-                Note note = new Note(id, title, content, color, createdDateTime, notifyDateTime);
-                lstNote.add(note);
-            } while (result.moveToNext());
-        }
-        return lstNote;
-    }
+
 
     private boolean checkPermission() {
         int result = ContextCompat.checkSelfPermission(getApplicationContext(), WRITE_EXTERNAL_STORAGE);

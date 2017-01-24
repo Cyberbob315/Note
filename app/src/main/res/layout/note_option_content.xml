@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:layout_below="@id/toolbar"
-    tools:context="nhannt.note.fragment.NoteFragment">
+    tools:context="nhannt.note.fragment.EditNoteFragment">
 
     <ImageView
         android:id="@+id/iv_background_detail"

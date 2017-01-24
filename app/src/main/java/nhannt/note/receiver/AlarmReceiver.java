@@ -11,7 +11,6 @@ import java.util.ArrayList;
 
 import nhannt.note.R;
 import nhannt.note.activity.DetailActivity;
-import nhannt.note.activity.NewActivity;
 import nhannt.note.model.Note;
 import nhannt.note.utils.Common;
 import nhannt.note.utils.Constant;
@@ -40,7 +39,8 @@ public class AlarmReceiver extends BroadcastReceiver {
             lstNote.add(itemNoteReceived);
             intentToDetailActivity.putExtra(Constant.KEY_LIST_NOTE, lstNote);
             intentToDetailActivity.putExtra(Constant.KEY_NOTE_POSITION, 0);
-//            intentToDetailActivity.addFlags(Intent.FLAG_ACTIVITY);
+            intentToDetailActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            Common.writeLog("color",itemNoteReceived.getColor()+"");
             PendingIntent pendingIntent = PendingIntent.getActivity(context, itemNoteReceived.getId(), intentToDetailActivity, 0);
             mBuilder.setContentIntent(pendingIntent);
             NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);

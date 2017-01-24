@@ -17,7 +17,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import java.util.ArrayList;
 
 import nhannt.note.R;
-import nhannt.note.activity.NewActivity;
 
 /**
  * Created by IceMan on 1/13/2017.
@@ -98,5 +97,11 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
             }
         });
         builder.create().show();
+    }
+
+    public void refreshList(ArrayList<String> lstImage){
+        mData.clear();
+        mData.addAll(lstImage);
+        notifyDataSetChanged();
     }
 }
