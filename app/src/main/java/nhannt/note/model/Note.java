@@ -25,7 +25,7 @@ public class Note implements Serializable {
         this.notifyDate = notifyDate;
     }
 
-    public Note(int id, String title, String content, int color,long createdDate, long notifyDate, ArrayList<String> imagePath) {
+    public Note(int id, String title, String content, int color, long createdDate, long notifyDate, ArrayList<String> imagePath) {
         this.id = id;
         this.title = title;
         this.content = content;

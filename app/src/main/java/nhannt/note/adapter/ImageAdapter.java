@@ -2,7 +2,6 @@ package nhannt.note.adapter;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -99,7 +98,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
         builder.create().show();
     }
 
-    public void refreshList(ArrayList<String> lstImage){
+    public void refreshList(ArrayList<String> lstImage) {
         mData.clear();
         mData.addAll(lstImage);
         notifyDataSetChanged();

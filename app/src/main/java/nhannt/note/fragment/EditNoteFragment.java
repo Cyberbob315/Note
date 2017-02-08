@@ -1,10 +1,11 @@
 package nhannt.note.fragment;
 
-import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -14,7 +15,6 @@ import nhannt.note.adapter.ImageAdapter;
 import nhannt.note.base.BaseFragment;
 import nhannt.note.database.NoteDatabase;
 import nhannt.note.model.Note;
-import nhannt.note.utils.AppController;
 import nhannt.note.utils.Common;
 import nhannt.note.utils.Constant;
 
@@ -73,21 +73,65 @@ public class EditNoteFragment extends BaseFragment {
     }
 
     @Override
-    protected void saveNote(ContentValues valuesNote) {
-        long result;
-        result = mDatabase.updateRecord(NoteDatabase.TBL_NOTE, valuesNote, NoteDatabase.TBL_NOTE_COLUMN_ID,
-                new String[]{getIdNoteToSave() + ""});
-        if (result > -1) {
+    protected void saveNote(Note itemNoteToSave) {
+        boolean result = mNoteHelper.update(itemNoteToSave, getIdNoteToSave());
+        if (result) {
             Toast.makeText(getActivity(), getString(R.string.success), Toast.LENGTH_SHORT).show();
             Intent intentRefreshHomeActivity = new Intent(Constant.ACTION_REFRESH_LIST);
             getActivity().sendBroadcast(intentRefreshHomeActivity);
         }
-        mDatabase.deleteRecord(NoteDatabase.TBL_IMAGE, NoteDatabase.TBL_IMAGE_COLUMN_NOTE_ID,
-                new String[]{getIdNoteToSave() + ""});
+        mImageHelper.delete(getIdNoteToSave());
         for (int i = 0; i < lstImagePath.size(); i++) {
-            saveImageToDatabase(getIdNoteToSave(), lstImagePath.get(i));
+            mImageHelper.insert(lstImagePath.get(i), getIdNoteToSave());
         }
         getActivity().onBackPressed();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.bt_share_menu:
+                shareNote();
+                break;
+            case R.id.bt_delete_menu:
+                showConfirmDeleteNoteDialog(getIdNoteToSave());
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void shareNote() {
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        String shareBody = etContent.getText().toString();
+        String shareSub = etTitle.getText().toString();
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, shareSub);
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+        startActivity(Intent.createChooser(sharingIntent, getString(R.string.share_using)));
+    }
+
+    private void showConfirmDeleteNoteDialog(final int noteId) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(getString(R.string.warning));
+        builder.setMessage(getString(R.string.delete_note_question));
+        builder.setPositiveButton(getString(R.string.btn_yes), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mDatabase.deleteRecord(NoteDatabase.TBL_NOTE, NoteDatabase.TBL_NOTE_COLUMN_ID, new String[]{noteId + ""});
+                Intent intent = new Intent(Constant.ACTION_REFRESH_LIST);
+                getActivity().sendBroadcast(intent);
+                dialog.dismiss();
+                cancelNotify();
+                getActivity().onBackPressed();
+            }
+        });
+        builder.setNegativeButton(getString(R.string.btn_cancel), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
     }
 
     @Override
@@ -105,7 +149,7 @@ public class EditNoteFragment extends BaseFragment {
 
         @Override
         protected Void doInBackground(Void... params) {
-            lstImagePath = AppController.getInstance().getImageFromDatabase(getIdNoteToSave());
+            lstImagePath = (ArrayList<String>) mImageHelper.getListById(getIdNoteToSave());
             return null;
         }
 
@@ -115,7 +159,6 @@ public class EditNoteFragment extends BaseFragment {
             rvImageList.setAdapter(mImageAdapter);
             super.onPostExecute(aVoid);
         }
-
 
     }
 }

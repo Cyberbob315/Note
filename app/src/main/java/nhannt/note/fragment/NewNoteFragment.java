@@ -1,14 +1,9 @@
 package nhannt.note.fragment;
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -16,7 +11,6 @@ import java.util.ArrayList;
 import nhannt.note.R;
 import nhannt.note.adapter.ImageAdapter;
 import nhannt.note.base.BaseFragment;
-import nhannt.note.database.NoteDatabase;
 import nhannt.note.model.Note;
 import nhannt.note.utils.Common;
 import nhannt.note.utils.Constant;
@@ -54,18 +48,17 @@ public class NewNoteFragment extends BaseFragment {
     }
 
     @Override
-    protected void saveNote(ContentValues valuesNote) {
-        long result;
-        result = mDatabase.insertRecord(NoteDatabase.TBL_NOTE, valuesNote);
+    protected void saveNote(Note itemNoteToSave) {
+        boolean result = mNoteHelper.insert(itemNoteToSave, getIdNoteToSave());
 
-        if (result > -1) {
+        if (result) {
             Toast.makeText(getActivity(), getString(R.string.success), Toast.LENGTH_SHORT).show();
             Intent intentRefreshHomeActivity = new Intent(Constant.ACTION_REFRESH_LIST);
             getActivity().sendBroadcast(intentRefreshHomeActivity);
         }
 
         for (int i = 0; i < lstImagePath.size(); i++) {
-            saveImageToDatabase(getIdNoteToSave() + 1, lstImagePath.get(i));
+            mImageHelper.insert(lstImagePath.get(i), getIdNoteToSave());
         }
         getActivity().onBackPressed();
     }
@@ -75,7 +68,7 @@ public class NewNoteFragment extends BaseFragment {
         tvCurrentTime.setText(Common.getCurrentDateTimeInStr(Constant.DATE_FORMAT));
         isFirstDateSpSelected = false;
         isFirstTimeSpSelected = false;
-        selectedColor = ContextCompat.getColor(getActivity(),R.color.white);
+        selectedColor = ContextCompat.getColor(getActivity(), R.color.white);
         strDateSelected = Common.getCurrentDateTimeInStr(Constant.DATE_FORMAT);
         strTimeSelected = getString(R.string.sp_time_slot1);
 
@@ -89,12 +82,12 @@ public class NewNoteFragment extends BaseFragment {
     @Override
     protected int getIdNoteToSave() {
         return lastNoteId + 1;
-}
+    }
 
     @Override
     protected void showImage(ArrayList lstImage) {
         lstImage = new ArrayList();
         mImageAdapter = new ImageAdapter(getActivity(), lstImage);
-        rvImageList.setAdapter(mImageAdapter)  ;
+        rvImageList.setAdapter(mImageAdapter);
     }
 }

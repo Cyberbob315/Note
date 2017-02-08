@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -27,9 +26,8 @@ import java.util.ArrayList;
 
 import nhannt.note.R;
 import nhannt.note.adapter.NoteAdapter;
-import nhannt.note.database.NoteDatabase;
+import nhannt.note.database.dao.NoteHelper;
 import nhannt.note.model.Note;
-import nhannt.note.utils.AppController;
 import nhannt.note.utils.Common;
 import nhannt.note.utils.Constant;
 import nhannt.note.utils.GridSpacingItemDecoration;
@@ -42,12 +40,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private static final int PERMISSION_REQUEST_CODE = 200;
 
     private Toolbar toolbar;
-    RecyclerView rvListNote;
-    FloatingActionButton fabAddNewNote;
-    ProgressBar pbLoadListNote;
-    ArrayList<Note> mListNote;
-    NoteAdapter mNoteAdapter;
-    NoteDatabase mNoteDatabase;
+    private RecyclerView rvListNote;
+    private FloatingActionButton fabAddNewNote;
+    private ProgressBar pbLoadListNote;
+    private ArrayList<Note> mListNote;
+    private NoteAdapter mNoteAdapter;
+    private NoteHelper mNoteHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +55,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         initControls();
         initEvents();
         registerBroadcastRefresh();
-        mNoteDatabase = NoteDatabase.getInstance(this);
+        mNoteHelper = NoteHelper.getInstance(this);
         if (Common.isMarshMallow()) {
             if (!checkPermission()) {
                 requestPermission();
@@ -125,7 +123,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         protected Void doInBackground(Void... params) {
-            mListNote = AppController.getInstance().getListNote();
+            mListNote = (ArrayList<Note>) mNoteHelper.getAllElement();
             return null;
         }
 
@@ -137,7 +135,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             pbLoadListNote.setVisibility(View.GONE);
         }
     }
-
 
 
     private boolean checkPermission() {

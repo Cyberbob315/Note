@@ -13,6 +13,7 @@
         android:background="?attr/selectableItemBackground"
         android:padding="@dimen/padding_color_chooser"
         android:layout_height="match_parent" />
+
     <ImageView
         android:id="@+id/iv_color_red"
         android:layout_width="0dp"
@@ -21,6 +22,7 @@
         android:background="?attr/selectableItemBackground"
         android:padding="@dimen/padding_color_chooser"
         android:layout_height="100dp" />
+
     <ImageView
         android:id="@+id/iv_color_blue"
         android:layout_width="0dp"
@@ -29,6 +31,7 @@
         android:background="?attr/selectableItemBackground"
         android:padding="@dimen/padding_color_chooser"
         android:layout_height="match_parent" />
+
     <ImageView
         android:id="@+id/iv_color_yellow"
         android:layout_width="0dp"
@@ -37,6 +40,7 @@
         android:background="?attr/selectableItemBackground"
         android:padding="@dimen/padding_color_chooser"
         android:layout_height="match_parent" />
+
     <ImageView
         android:id="@+id/iv_color_green"
         android:layout_width="0dp"

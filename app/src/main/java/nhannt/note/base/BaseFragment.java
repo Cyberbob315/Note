@@ -2,17 +2,16 @@ package nhannt.note.base;
 
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
-import android.content.Context;
-import android.support.v4.app.Fragment;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
-import android.content.DialogInterface;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -45,6 +44,8 @@ import nhannt.note.R;
 import nhannt.note.activity.HostActivity;
 import nhannt.note.adapter.ImageAdapter;
 import nhannt.note.database.NoteDatabase;
+import nhannt.note.database.dao.ImageHelper;
+import nhannt.note.database.dao.NoteHelper;
 import nhannt.note.model.Note;
 import nhannt.note.receiver.AlarmReceiver;
 import nhannt.note.utils.Common;
@@ -59,6 +60,8 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
 
     private Context mContext;
     protected Toolbar toolbar;
+    protected NoteHelper mNoteHelper = NoteHelper.getInstance(getActivity());
+    protected ImageHelper mImageHelper = ImageHelper.getInstance(getActivity());
     private View mView;
     protected Note mItemNote;
     protected int lastNoteId, selectedColor;
@@ -74,7 +77,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     protected ImageView btCloseDateTime, ivBackGround;
     protected ArrayAdapter spDateAdapter, spTimeAdapter;
     protected ArrayList<String> lstDate, lstTime;
-    protected ArrayList<String> lstImagePath;
+    protected ArrayList<String> lstImagePath = new ArrayList<>();
     protected LinearLayout llTakePhotos, llChoosePhotos;
     protected ImageAdapter mImageAdapter;
     private ImageView btnRed, btnBlue, btnGreen, btnYellow, btnWhite;
@@ -130,7 +133,6 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     }
 
 
-
     protected abstract void setUpTextViewAndDateTime();
 
     private void initEvents() {
@@ -178,40 +180,29 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
 
     protected abstract void showImage(ArrayList lstImage);
 
-    private void shareNote() {
-        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-        sharingIntent.setType("text/plain");
-        String shareBody = etContent.getText().toString();
-        String shareSub = etTitle.getText().toString();
-        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, shareSub);
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
-        startActivity(Intent.createChooser(sharingIntent, getString(R.string.share_using)));
-    }
 
     protected abstract int getIdNoteToSave();
 
     private void saveNoteToDatabase() {
         String dateTime = strDateSelected + " " + strTimeSelected;
+
         ContentValues valuesNote = new ContentValues();
         valuesNote.put(NoteDatabase.TBL_NOTE_COLUMN_NOTE_CONTENT, etContent.getText().toString().trim());
         valuesNote.put(NoteDatabase.TBL_NOTE_COLUMN_NOTE_TITLE, etTitle.getText().toString().trim());
         valuesNote.put(NoteDatabase.TBL_NOTE_COLUMN_NOTE_COLOR, selectedColor + "");
+        long dateCreated = Common.parseStrDateTimeToMills(Common.getCurrentDateTimeInStr(NoteDatabase.SQL_DATE_FORMAT), NoteDatabase.SQL_DATE_FORMAT);
+        long dateNotify = Common.parseStrDateTimeToMills(dateTime, NoteDatabase.SQL_DATE_FORMAT);
         valuesNote.put(NoteDatabase.TBL_NOTE_COLUMN_NOTIFY_TIME, Common.parseStrDateTimeToMills(dateTime, NoteDatabase.SQL_DATE_FORMAT));
         valuesNote.put(NoteDatabase.TBL_NOTE_COLUMN_CREATED_TIME,
                 Common.parseStrDateTimeToMills(Common.getCurrentDateTimeInStr(NoteDatabase.SQL_DATE_FORMAT), NoteDatabase.SQL_DATE_FORMAT));
         Log.d("test", Common.parseStrDateTimeToMills(Common.getCurrentDateTimeInStr(NoteDatabase.SQL_DATE_FORMAT), NoteDatabase.SQL_DATE_FORMAT) + "");
-
-        saveNote(valuesNote);
+        Note itemNoteToSave = new Note(getIdNoteToSave(), etTitle.getText().toString(), etContent.getText().toString(),
+                selectedColor, dateCreated, dateNotify);
+        saveNote(itemNoteToSave);
     }
 
-    protected abstract void saveNote(ContentValues valuesNote);
+    protected abstract void saveNote(Note itemNoteToSave);
 
-    protected void saveImageToDatabase(int noteId, String path) {
-        ContentValues valuesImage = new ContentValues();
-        valuesImage.put(NoteDatabase.TBL_IMAGE_COLUMN_NOTE_ID, noteId);
-        valuesImage.put(NoteDatabase.TBL_IMAGE_COLUMN_PATH, path);
-        mDatabase.insertRecord(NoteDatabase.TBL_IMAGE, valuesImage);
-    }
 
     private void initControls() {
         ivBackGround = (ImageView) mView.findViewById(R.id.iv_background_detail);
@@ -258,15 +249,9 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
             case android.R.id.home:
                 getActivity().onBackPressed();
                 break;
-            case R.id.bt_share_menu:
-                shareNote();
-                break;
-            case R.id.bt_delete_menu:
-                showConfirmDeleteNoteDialog(getIdNoteToSave());
-                break;
             case R.id.bt_new_note_menu:
                 Intent intent = new Intent(mContext, HostActivity.class);
-                intent.putExtra(Constant.KEY_LAST_NOTE_ID,lastNoteId);
+                intent.putExtra(Constant.KEY_LAST_NOTE_ID, lastNoteId);
                 mContext.startActivity(intent);
                 break;
         }
@@ -326,8 +311,6 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     protected ActionBar getActionBar() {
         return ((AppCompatActivity) getActivity()).getSupportActionBar();
     }
-
-
 
 
     @Override
@@ -434,29 +417,6 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         alertDialogColor.show();
     }
 
-    private void showConfirmDeleteNoteDialog(final int noteId) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(getString(R.string.warning));
-        builder.setMessage(getString(R.string.delete_note_question));
-        builder.setPositiveButton(getString(R.string.btn_yes), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                mDatabase.deleteRecord(NoteDatabase.TBL_NOTE, NoteDatabase.TBL_NOTE_COLUMN_ID, new String[]{noteId + ""});
-                Intent intent = new Intent(Constant.ACTION_REFRESH_LIST);
-                getActivity().sendBroadcast(intent);
-                dialog.dismiss();
-                cancelNotify();
-                getActivity().onBackPressed();
-            }
-        });
-        builder.setNegativeButton(getString(R.string.btn_cancel), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        builder.create().show();
-    }
 
     protected void cancelNotify() {
         alarmManager = (AlarmManager) getActivity().getSystemService(AppCompatActivity.ALARM_SERVICE);
@@ -465,7 +425,6 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         long createdDateTime = Common.parseStrDateTimeToMills(Common.getCurrentDateTimeInStr(NoteDatabase.SQL_DATE_FORMAT), NoteDatabase.SQL_DATE_FORMAT);
         long notifyDateTime = Common.parseStrDateTimeToMills(strDateSelected + " " + strTimeSelected, NoteDatabase.SQL_DATE_FORMAT);
         Common.writeLog("Notify", notifyDateTime + "");
-
         itemNoteToNotify = new Note(getIdNoteToSave(), etTitle.getText().toString(), etContent.getText().toString(), selectedColor,
                 createdDateTime, notifyDateTime);
         intentToAlarmClass.putExtra(AlarmReceiver.KEY_NOTE_TO_NOTIFY, itemNoteToNotify);

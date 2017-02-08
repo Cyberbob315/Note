@@ -1,11 +1,11 @@
 package nhannt.note.activity;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 
 import nhannt.note.R;
 import nhannt.note.fragment.NewNoteFragment;
@@ -23,7 +23,7 @@ public class HostActivity extends AppCompatActivity {
         setContentView(R.layout.activity_host);
         getDataFromIntent();
         NewNoteFragment newNoteFragment = NewNoteFragment.newInstance(itemNote, lastNoteId);
-        showFragment(newNoteFragment,NewNoteFragment.TAG);
+        showFragment(newNoteFragment, NewNoteFragment.TAG);
     }
 
     private void getDataFromIntent() {
@@ -32,7 +32,7 @@ public class HostActivity extends AppCompatActivity {
         lastNoteId = intent.getExtras().getInt(Constant.KEY_LAST_NOTE_ID);
     }
 
-    private void showFragment(Fragment fragment, String tag){
+    private void showFragment(Fragment fragment, String tag) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 //        fragmentTransaction.addToBackStack("");

@@ -1,10 +1,10 @@
 package nhannt.note.activity;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
 import java.util.ArrayList;
@@ -12,11 +12,9 @@ import java.util.ArrayList;
 import nhannt.note.R;
 import nhannt.note.adapter.NoteViewPagerAdapter;
 import nhannt.note.model.Note;
-import nhannt.note.utils.Common;
 import nhannt.note.utils.Constant;
 
 public class DetailActivity extends AppCompatActivity {
-
 
 
     private ViewPager mNoteViewPager;
@@ -38,6 +36,7 @@ public class DetailActivity extends AppCompatActivity {
         setUpViewPager();
 
     }
+
     private void setupToolbar() {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {

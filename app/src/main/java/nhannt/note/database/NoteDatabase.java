@@ -44,13 +44,13 @@ public class NoteDatabase extends SQLiteOpenHelper {
             + TBL_NOTE_COLUMN_ID + " integer primary key autoincrement,"
             + TBL_NOTE_COLUMN_NOTE_TITLE + " text,"
             + TBL_NOTE_COLUMN_NOTE_CONTENT + " text,"
-            + TBL_NOTE_COLUMN_NOTE_COLOR +" integer,"
+            + TBL_NOTE_COLUMN_NOTE_COLOR + " integer,"
             + TBL_NOTE_COLUMN_CREATED_TIME + " integer ,"
             + TBL_NOTE_COLUMN_NOTIFY_TIME + " integer);";
 
     private static final String CREATE_TABLE_IMAGE = "create table " + TBL_IMAGE + "("
             + TBL_IMAGE_COLUMN_ID + " integer primary key autoincrement,"
-                + TBL_IMAGE_COLUMN_NOTE_ID + " int,"
+            + TBL_IMAGE_COLUMN_NOTE_ID + " int,"
             + TBL_IMAGE_COLUMN_PATH + " text,"
             + "foreign key (" + TBL_IMAGE_COLUMN_NOTE_ID + ") references " + TBL_NOTE + "(" + TBL_NOTE_COLUMN_ID + ") "
             + "on update cascade on delete cascade);";

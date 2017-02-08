@@ -45,7 +45,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
         holder.tvNoteTitle.setText(mData.get(position).getTitle());
         holder.tvNoteContent.setText(mData.get(position).getContent());
         holder.cardView.setCardBackgroundColor(mData.get(position).getColor());
-        holder.tvNoteDate.setText(Common.getDateStrFromMilliseconds(mData.get(position).getCreatedDate(),"yyyy-MM-dd"));
+        holder.tvNoteDate.setText(Common.getDateStrFromMilliseconds(mData.get(position).getCreatedDate(), "yyyy-MM-dd"));
         holder.pos = position;
     }
 
