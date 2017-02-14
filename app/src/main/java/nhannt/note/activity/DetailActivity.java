@@ -19,20 +19,23 @@ public class DetailActivity extends AppCompatActivity {
 
     private ViewPager mNoteViewPager;
     private ArrayList<Note> mListNote;
-    private Toolbar toolbar;
     private NoteViewPagerAdapter mVPAdapter;
     private int notePos;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         initControls();
         setupToolbar();
         getDataFromIntent();
-        getSupportActionBar().setTitle(mListNote.get(notePos).getTitle());
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(mListNote.get(notePos).getTitle());
+        }
+
         setUpViewPager();
 
     }
@@ -47,7 +50,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void setUpViewPager() {
-        mVPAdapter = new NoteViewPagerAdapter(getSupportFragmentManager(), getApplicationContext(), mListNote);
+        mVPAdapter = new NoteViewPagerAdapter(getSupportFragmentManager(), mListNote);
         mNoteViewPager.setOffscreenPageLimit(3);
         mNoteViewPager.setAdapter(mVPAdapter);
         mNoteViewPager.setCurrentItem(notePos);
@@ -59,7 +62,9 @@ public class DetailActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                getSupportActionBar().setTitle(mVPAdapter.getPageTitle(position));
+                if (getSupportActionBar() != null) {
+                    getSupportActionBar().setTitle(mVPAdapter.getPageTitle(position));
+                }
             }
 
             @Override
@@ -70,6 +75,7 @@ public class DetailActivity extends AppCompatActivity {
 
     }
 
+    @SuppressWarnings("unchecked")
     private void getDataFromIntent() {
         Intent intent = getIntent();
         if (intent != null) {

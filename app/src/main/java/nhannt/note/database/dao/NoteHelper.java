@@ -12,7 +12,7 @@ import nhannt.note.database.NoteDatabase;
 import nhannt.note.model.Note;
 
 /**
- * Created by nhannt on 2/8/17.
+ * A class implements IDAOHandle for accessing and saving Note from database
  */
 
 public class NoteHelper implements IDAOHandle<Note, Integer> {
@@ -27,7 +27,7 @@ public class NoteHelper implements IDAOHandle<Note, Integer> {
         return mInstance;
     }
 
-    public NoteHelper(Context mContext) {
+    private NoteHelper(Context mContext) {
         mDatabase = NoteDatabase.getInstance(mContext);
     }
 
@@ -66,11 +66,7 @@ public class NoteHelper implements IDAOHandle<Note, Integer> {
         valuesNote.put(NoteDatabase.TBL_NOTE_COLUMN_CREATED_TIME, obj.getCreatedDate());
         long result = mDatabase.insertRecord(NoteDatabase.TBL_NOTE, valuesNote);
         boolean isSuccess;
-        if (result > -1) {
-            isSuccess = true;
-        } else {
-            isSuccess = false;
-        }
+        isSuccess = (result > -1);
         return isSuccess;
     }
 
@@ -85,7 +81,7 @@ public class NoteHelper implements IDAOHandle<Note, Integer> {
         long result = mDatabase.updateRecord(NoteDatabase.TBL_NOTE, valuesNote, NoteDatabase.TBL_NOTE_COLUMN_ID,
                 new String[]{obj.getId() + ""});
         boolean isSuccess;
-        isSuccess = result > -1 ? true : false;
+        isSuccess = result > -1;
         return isSuccess;
     }
 
@@ -93,7 +89,7 @@ public class NoteHelper implements IDAOHandle<Note, Integer> {
     public boolean delete(Integer noteId) {
         long result = mDatabase.deleteRecord(NoteDatabase.TBL_NOTE, NoteDatabase.TBL_NOTE_COLUMN_ID, new String[]{noteId + ""});
         boolean isSuccess;
-        isSuccess = result > 0 ? true : false;
+        isSuccess = result > 0;
         return isSuccess;
     }
 }

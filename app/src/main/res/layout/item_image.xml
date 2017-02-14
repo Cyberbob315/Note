@@ -7,13 +7,15 @@
         android:id="@+id/iv_image_item"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/contentDescriptionItemImage"/>
 
     <ImageView
         android:id="@+id/bt_delete_image_item"
         android:src="@drawable/ic_close"
         android:layout_width="@dimen/delete_photo_btn_height_width"
         android:layout_height="@dimen/delete_photo_btn_height_width"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:contentDescription="@string/contentDescriptionDeleteImage"/>
 </nhannt.note.base.SquareRelativeLayout>

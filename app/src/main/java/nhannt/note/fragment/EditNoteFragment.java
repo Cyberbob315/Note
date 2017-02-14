@@ -17,14 +17,20 @@ import nhannt.note.database.NoteDatabase;
 import nhannt.note.model.Note;
 import nhannt.note.utils.Common;
 import nhannt.note.utils.Constant;
+import nhannt.note.utils.DateTimeUtils;
 
 /**
  * Created by iceman on 1/24/2017.
+ *
+ * Fragment extended BaseFragment for edit an existing note
+ * Beside BaseFragment's methods,it provides and implement methods for saving current note edited
+ *
+ * @author nhannt
+ *
  */
 
 public class EditNoteFragment extends BaseFragment {
 
-    public static final String TAG = EditNoteFragment.class.getName();
 
     public static EditNoteFragment newInstance(Note itemNote, int lastNoteId) {
         Bundle args = new Bundle();
@@ -49,9 +55,9 @@ public class EditNoteFragment extends BaseFragment {
     protected void setUpTextViewAndDateTime() {
         etContent.setText(mItemNote.getContent());
         etTitle.setText(mItemNote.getTitle());
-        tvCurrentTime.setText(Common.getDateStrFromMilliseconds(mItemNote.getCreatedDate(), Constant.DATE_FORMAT));
-        strDateSelected = Common.getDateStrFromMilliseconds(mItemNote.getNotifyDate(), Constant.DATE_FORMAT);
-        strTimeSelected = Common.getDateStrFromMilliseconds(mItemNote.getNotifyDate(), Constant.TIME_FORMAT);
+        tvCurrentTime.setText(DateTimeUtils.getDateStrFromMilliseconds(mItemNote.getCreatedDate(), Constant.DATE_FORMAT));
+        strDateSelected = DateTimeUtils.getDateStrFromMilliseconds(mItemNote.getNotifyDate(), Constant.DATE_FORMAT);
+        strTimeSelected = DateTimeUtils.getDateStrFromMilliseconds(mItemNote.getNotifyDate(), Constant.TIME_FORMAT);
         Common.writeLog("date", mItemNote.getNotifyDate() + "");
         Common.writeLog("date", strDateSelected + "/" + strTimeSelected);
         isFirstDateSpSelected = true;
@@ -100,6 +106,8 @@ public class EditNoteFragment extends BaseFragment {
         return super.onOptionsItemSelected(item);
     }
 
+
+
     private void shareNote() {
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
@@ -140,12 +148,13 @@ public class EditNoteFragment extends BaseFragment {
         setToNotify();
     }
 
-    public class LoadImageOfNote extends AsyncTask<Void, Void, Void> {
+    @Override
+    protected int getHomeAsUpIndicator() {
+        return R.mipmap.ic_launcher;
+    }
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
+    private class LoadImageOfNote extends AsyncTask<Void, Void, Void> {
+
 
         @Override
         protected Void doInBackground(Void... params) {

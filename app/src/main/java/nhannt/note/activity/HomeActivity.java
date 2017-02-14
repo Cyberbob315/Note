@@ -39,12 +39,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     private static final int PERMISSION_REQUEST_CODE = 200;
 
-    private Toolbar toolbar;
     private RecyclerView rvListNote;
     private FloatingActionButton fabAddNewNote;
     private ProgressBar pbLoadListNote;
     private ArrayList<Note> mListNote;
-    private NoteAdapter mNoteAdapter;
     private NoteHelper mNoteHelper;
 
     @Override
@@ -85,7 +83,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void settingToolbar() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             ActionBar actionBar = getSupportActionBar();
@@ -114,7 +112,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    class LoadNotes extends AsyncTask<Void, Void, Void> {
+    private class LoadNotes extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -130,7 +128,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            mNoteAdapter = new NoteAdapter(HomeActivity.this, mListNote);
+            NoteAdapter mNoteAdapter = new NoteAdapter(HomeActivity.this, mListNote);
             rvListNote.setAdapter(mNoteAdapter);
             pbLoadListNote.setVisibility(View.GONE);
         }
@@ -172,7 +170,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                                             requestPermission();
                                         }
                                     });
-                            return;
                         }
                     }
                 }
@@ -188,7 +185,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 .show();
     }
 
-    BroadcastReceiver broadcastReceiverRefresh = new BroadcastReceiver() {
+    private final BroadcastReceiver broadcastReceiverRefresh = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             new LoadNotes().execute();

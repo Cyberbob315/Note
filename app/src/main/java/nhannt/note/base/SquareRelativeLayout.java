@@ -6,6 +6,10 @@ import android.widget.RelativeLayout;
 
 /**
  * Created by IceMan on 12/27/2016.
+ * A custom relative layout which extended base relative layout
+ * this layout have width equals to height in order to create a square item
+ *
+ * @author nhannt
  */
 
 public class SquareRelativeLayout extends RelativeLayout {

@@ -8,11 +8,15 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 /**
  * Created by IceMan on 12/30/2016.
+ * A database use to save note and image.
+ * It contains 2 tables : Note (for saving note) and Image (for saving Images attached with a note)
+ *
+ * @author nhannt
  */
 
 public class NoteDatabase extends SQLiteOpenHelper {
 
-    public static NoteDatabase mInstance;
+    private static NoteDatabase mInstance;
 
 
     public static NoteDatabase getInstance(Context mContext) {
@@ -22,8 +26,8 @@ public class NoteDatabase extends SQLiteOpenHelper {
         return mInstance;
     }
 
-    public static final String DB_NAME = "NoteManagement.db";
-    public static final int DB_VERSION = 1;
+    private static final String DB_NAME = "NoteManagement.db";
+    private static final int DB_VERSION = 1;
 
     public static final String TBL_NOTE = "NoteTable";
     public static final String TBL_NOTE_COLUMN_ID = "NoteId";
@@ -34,7 +38,7 @@ public class NoteDatabase extends SQLiteOpenHelper {
     public static final String TBL_NOTE_COLUMN_NOTIFY_TIME = "NotifyTime";
 
     public static final String TBL_IMAGE = "ImageTable";
-    public static final String TBL_IMAGE_COLUMN_ID = "ImageId";
+    private static final String TBL_IMAGE_COLUMN_ID = "ImageId";
     public static final String TBL_IMAGE_COLUMN_NOTE_ID = "NoteId";
     public static final String TBL_IMAGE_COLUMN_PATH = "ImagePath";
 
@@ -59,7 +63,7 @@ public class NoteDatabase extends SQLiteOpenHelper {
     public static final String QUERY_GET_IMAGE_WITH_NOTE_ID = "select * from " + TBL_IMAGE
             + " where " + TBL_IMAGE_COLUMN_NOTE_ID + "=";
 
-    public NoteDatabase(Context context) {
+    private NoteDatabase(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
 

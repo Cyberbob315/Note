@@ -12,7 +12,8 @@
         android:src="@color/white"
         android:background="?attr/selectableItemBackground"
         android:padding="@dimen/padding_color_chooser"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:contentDescription="@string/contentDescriptionChooseColor"/>
 
     <ImageView
         android:id="@+id/iv_color_red"
@@ -21,7 +22,8 @@
         android:src="@color/colorRed"
         android:background="?attr/selectableItemBackground"
         android:padding="@dimen/padding_color_chooser"
-        android:layout_height="100dp" />
+        android:layout_height="100dp"
+        android:contentDescription="@string/contentDescriptionChooseColor"/>
 
     <ImageView
         android:id="@+id/iv_color_blue"
@@ -30,7 +32,8 @@
         android:src="@color/blue"
         android:background="?attr/selectableItemBackground"
         android:padding="@dimen/padding_color_chooser"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:contentDescription="@string/contentDescriptionChooseColor"/>
 
     <ImageView
         android:id="@+id/iv_color_yellow"
@@ -39,7 +42,8 @@
         android:src="@color/yellow"
         android:background="?attr/selectableItemBackground"
         android:padding="@dimen/padding_color_chooser"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:contentDescription="@string/contentDescriptionChooseColor"/>
 
     <ImageView
         android:id="@+id/iv_color_green"
@@ -48,6 +52,7 @@
         android:src="@color/green"
         android:background="?attr/selectableItemBackground"
         android:padding="@dimen/padding_color_chooser"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:contentDescription="@string/contentDescriptionChooseColor"/>
 
 </LinearLayout>

@@ -3,10 +3,13 @@
     <!-- Home Activity-->
     <string name="permission_denied">Permission Denied, You cannot access database</string>
     <string name="ask_permission">You need to allow access to the permissions</string>
-    <string name="btn_ok">Ok</string>
+    <string name="btn_ok">OK</string>
     <string name="btn_cancel">Cancel</string>
     <string name="date">Date</string>
     <!-- New Activity , Detail Activity -->
+    <string name="new_note">New Note</string>
+    <string name="share">Share</string>
+    <string name="delete">Delete</string>
     <string name="insert_photo">Insert Photos</string>
     <string name="select_color">Select Color</string>
     <string name="success">Success</string>
@@ -20,17 +23,26 @@
     <string name="enter_title">Enter title</string>
     <string name="enter_content">Enter content</string>
     <string name="alarm">Alarm</string>
-    <string name="nothing_change">Nothing changed</string>
 
 
     <!--Date Spinner-->
     <string name="today">Today</string>
     <string name="tomorrow">Tomorrow</string>
     <string name="next">Next </string>
-    <string name="other">Other...</string>
+    <string name="other">Other</string>
     <!--Time Spinner-->
     <string name="sp_time_slot1">9:00</string>
     <string name="sp_time_slot2">13:00</string>
     <string name="sp_time_slot3">17:00</string>
+
+    <string name="contentDescriptionItemImage">show color of a note</string>
+    <string name="contentDescriptionDeleteImage">show delete image button</string>
+    <string name="contentDescriptionChooseColor">a color to choose</string>
+    <string name="contentDescriptionBackGround">set color to a note when edit or create it</string>
+    <string name="contentDescriptionCamera">camera to take photo</string>
+    <string name="contentDescriptionGallery">gallery to select photo</string>
+    <string name="contentDescriptionAlarm">alarm icon</string>
+    <string name="contentDescriptionDateTimeClose">close datetime chooser</string>
+
 
 </resources>

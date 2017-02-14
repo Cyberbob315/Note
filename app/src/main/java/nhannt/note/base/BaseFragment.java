@@ -4,7 +4,6 @@ import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -36,10 +35,8 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
-
 import java.util.ArrayList;
 import java.util.Calendar;
-
 import nhannt.note.R;
 import nhannt.note.activity.HostActivity;
 import nhannt.note.adapter.ImageAdapter;
@@ -50,16 +47,17 @@ import nhannt.note.model.Note;
 import nhannt.note.receiver.AlarmReceiver;
 import nhannt.note.utils.Common;
 import nhannt.note.utils.Constant;
+import nhannt.note.utils.DateTimeUtils;
 import nhannt.note.utils.GridSpacingItemDecoration;
 
+
 /**
- * Created by iceman on 1/23/2017.
+ * An abstract fragment which contains all methods use to display,save note for EditNoteFragment and NewNoteFragment
  */
 
 public abstract class BaseFragment extends Fragment implements View.OnClickListener, Spinner.OnItemSelectedListener {
 
     private Context mContext;
-    protected Toolbar toolbar;
     protected NoteHelper mNoteHelper = NoteHelper.getInstance(getActivity());
     protected ImageHelper mImageHelper = ImageHelper.getInstance(getActivity());
     private View mView;
@@ -71,17 +69,18 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     private AlarmManager alarmManager;
     protected RecyclerView rvImageList;
     protected EditText etTitle, etContent;
-    protected TextView tvCurrentTime, tvAlarm;
+    protected TextView tvCurrentTime;
+    private TextView tvAlarm;
     private LinearLayout llDateTime;
     protected AppCompatSpinner spDate, spTime;
-    protected ImageView btCloseDateTime, ivBackGround;
-    protected ArrayAdapter spDateAdapter, spTimeAdapter;
+    private ImageView btCloseDateTime;
+    protected ImageView ivBackGround;
+    private ArrayAdapter spDateAdapter, spTimeAdapter;
     protected ArrayList<String> lstDate, lstTime;
     protected ArrayList<String> lstImagePath = new ArrayList<>();
-    protected LinearLayout llTakePhotos, llChoosePhotos;
     protected ImageAdapter mImageAdapter;
-    private ImageView btnRed, btnBlue, btnGreen, btnYellow, btnWhite;
     protected boolean isFirstTimeSpSelected, isFirstDateSpSelected;
+    private ViewGroup root;
 
 
     public BaseFragment() {
@@ -93,8 +92,9 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
         if (bundle != null) {
-            mItemNote = (Note) bundle.getSerializable(Constant.KEY_NOTE_DETAIL);
-            lastNoteId = bundle.getInt(Constant.KEY_LAST_NOTE_ID);
+
+            mItemNote = (Note) bundle.getSerializable(Constant.KEY_NOTE_DETAIL); //Get selected note from home list
+            lastNoteId = bundle.getInt(Constant.KEY_LAST_NOTE_ID); // Get last note id in database to determine next note id to save
         }
     }
 
@@ -108,6 +108,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
+        root = container;
         return inflater.inflate(getLayout(), container, false);
     }
 
@@ -142,12 +143,13 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         spTime.setOnItemSelectedListener(this);
     }
 
+    @SuppressWarnings("unchecked")
     private void setupSpinnerDateNSpinnerTime() {
         //Spinner Date
         lstDate = new ArrayList<>();
         lstDate.add(getString(R.string.today));
         lstDate.add(getString(R.string.tomorrow));
-        lstDate.add(getString(R.string.next) + " " + Common.getCurrentDayOfWeek());
+        lstDate.add(getString(R.string.next) + " " + DateTimeUtils.getCurrentDayOfWeek());
         lstDate.add(getString(R.string.other));
         spDateAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_gallery_item, lstDate);
         spDateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -162,18 +164,12 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         spTimeAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_gallery_item, lstTime);
         spTimeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spTime.setAdapter(spTimeAdapter);
-//        lstTime.remove(3);
-//        lstTime.add(strTimeSelected);
-//        spTime.setSelection(3);
-//        lstDate.remove(3);
-//        lstDate.add(strDateSelected);
-//        spDate.setSelection(3);
     }
 
     private void setUpImageList() {
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 4);
         rvImageList.setLayoutManager(layoutManager);
-        GridSpacingItemDecoration itemDecoration = new GridSpacingItemDecoration(4, 40, false);
+        GridSpacingItemDecoration itemDecoration = new GridSpacingItemDecoration(4, 30, false);
         rvImageList.addItemDecoration(itemDecoration);
         showImage(lstImagePath);
     }
@@ -185,17 +181,8 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
 
     private void saveNoteToDatabase() {
         String dateTime = strDateSelected + " " + strTimeSelected;
-
-        ContentValues valuesNote = new ContentValues();
-        valuesNote.put(NoteDatabase.TBL_NOTE_COLUMN_NOTE_CONTENT, etContent.getText().toString().trim());
-        valuesNote.put(NoteDatabase.TBL_NOTE_COLUMN_NOTE_TITLE, etTitle.getText().toString().trim());
-        valuesNote.put(NoteDatabase.TBL_NOTE_COLUMN_NOTE_COLOR, selectedColor + "");
-        long dateCreated = Common.parseStrDateTimeToMills(Common.getCurrentDateTimeInStr(NoteDatabase.SQL_DATE_FORMAT), NoteDatabase.SQL_DATE_FORMAT);
-        long dateNotify = Common.parseStrDateTimeToMills(dateTime, NoteDatabase.SQL_DATE_FORMAT);
-        valuesNote.put(NoteDatabase.TBL_NOTE_COLUMN_NOTIFY_TIME, Common.parseStrDateTimeToMills(dateTime, NoteDatabase.SQL_DATE_FORMAT));
-        valuesNote.put(NoteDatabase.TBL_NOTE_COLUMN_CREATED_TIME,
-                Common.parseStrDateTimeToMills(Common.getCurrentDateTimeInStr(NoteDatabase.SQL_DATE_FORMAT), NoteDatabase.SQL_DATE_FORMAT));
-        Log.d("test", Common.parseStrDateTimeToMills(Common.getCurrentDateTimeInStr(NoteDatabase.SQL_DATE_FORMAT), NoteDatabase.SQL_DATE_FORMAT) + "");
+        long dateCreated = DateTimeUtils.parseStrDateTimeToMills(DateTimeUtils.getCurrentDateTimeInStr(NoteDatabase.SQL_DATE_FORMAT), NoteDatabase.SQL_DATE_FORMAT);
+        long dateNotify = DateTimeUtils.parseStrDateTimeToMills(dateTime, NoteDatabase.SQL_DATE_FORMAT);
         Note itemNoteToSave = new Note(getIdNoteToSave(), etTitle.getText().toString(), etContent.getText().toString(),
                 selectedColor, dateCreated, dateNotify);
         saveNote(itemNoteToSave);
@@ -215,10 +202,11 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         spDate = (AppCompatSpinner) mView.findViewById(R.id.sp_choose_date);
         spTime = (AppCompatSpinner) mView.findViewById(R.id.sp_choose_time);
         btCloseDateTime = (ImageView) mView.findViewById(R.id.bt_close_date_time);
+
     }
 
     private void settingToolbar(View view) {
-        toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         if (toolbar != null) {
             ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
             ActionBar actionBar = getActionBar();
@@ -260,16 +248,19 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
 
     protected abstract void setAlarm();
 
+    //Set current note to notify
     protected void setToNotify() {
         alarmManager = (AlarmManager) mContext.getSystemService(AppCompatActivity.ALARM_SERVICE);
         Intent intentToAlarmClass = new Intent(getActivity(), AlarmReceiver.class);
         Note itemNoteToNotify;
-        long createdDateTime = Common.parseStrDateTimeToMills(Common.getCurrentDateTimeInStr(NoteDatabase.SQL_DATE_FORMAT), NoteDatabase.SQL_DATE_FORMAT);
-        long notifyDateTime = Common.parseStrDateTimeToMills(strDateSelected + " " + strTimeSelected, NoteDatabase.SQL_DATE_FORMAT);
+        long createdDateTime = DateTimeUtils.parseStrDateTimeToMills(DateTimeUtils.getCurrentDateTimeInStr(NoteDatabase.SQL_DATE_FORMAT), NoteDatabase.SQL_DATE_FORMAT);
+        long notifyDateTime = DateTimeUtils.parseStrDateTimeToMills(strDateSelected + " " + strTimeSelected, NoteDatabase.SQL_DATE_FORMAT);
         Common.writeLog("Notify", notifyDateTime + "");
         itemNoteToNotify = new Note(getIdNoteToSave(), etTitle.getText().toString(), etContent.getText().toString(),
                 selectedColor, createdDateTime, notifyDateTime);
-        intentToAlarmClass.putExtra(AlarmReceiver.KEY_NOTE_TO_NOTIFY, itemNoteToNotify);
+        intentToAlarmClass.putExtra(AlarmReceiver.KEY_NOTE_TO_NOTIFY, itemNoteToNotify); //push note item to intent
+
+        //Create pending intent to broadcast for Alarm manager,use noteId to create an unique alarm manager
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), getIdNoteToSave(),
                 intentToAlarmClass, PendingIntent.FLAG_UPDATE_CURRENT);
         alarmManager.set(AlarmManager.RTC_WAKEUP, notifyDateTime, pendingIntent);
@@ -277,21 +268,22 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case Constant.CAMERA_REQUEST:
                 if (data != null) {
-                    Bitmap photo = (Bitmap) data.getExtras().get("data");
-                    String path = Common.saveImage(getActivity(), photo);
+                    Bitmap photo = (Bitmap) data.getExtras().get("data"); //get bitmap of photo just taken
+                    String path = Common.saveImage(getActivity(), photo); //save to storage then get path
                     lstImagePath.add(path);
                     mImageAdapter.refreshList((ArrayList<String>) lstImagePath.clone());
                 }
                 break;
             case Constant.GALLERY_REQUEST:
                 if (data != null) {
-                    Uri selectedImage = data.getData();
-                    String selectedImagePath = Common.getRealPathFromURI(getActivity(), selectedImage);
+                    Uri selectedImage = data.getData(); //get uri of photo just selected
+                    String selectedImagePath = Common.getRealPathFromURI(getActivity(), selectedImage); //get path from uri
                     Log.d("image", selectedImagePath);
                     lstImagePath.add(selectedImagePath);
                     mImageAdapter.refreshList((ArrayList<String>) lstImagePath.clone());
@@ -300,15 +292,15 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         }
     }
 
-    protected String getActionbarName() {
+
+
+    private String getActionbarName() {
         return getActivity().getResources().getString(R.string.app_name);
     }
 
-    protected int getHomeAsUpIndicator() {
-        return R.mipmap.ic_launcher;
-    }
+    protected abstract int getHomeAsUpIndicator();
 
-    protected ActionBar getActionBar() {
+    private ActionBar getActionBar() {
         return ((AppCompatActivity) getActivity()).getSupportActionBar();
     }
 
@@ -385,26 +377,29 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
 
     private void showPhotoChooserDialog() {
         LayoutInflater inflater = LayoutInflater.from(getActivity());
-        final View view = inflater.inflate(R.layout.photos_chooser_dialog, null);
-        llTakePhotos = (LinearLayout) view.findViewById(R.id.ll_take_photos);
-        llChoosePhotos = (LinearLayout) view.findViewById(R.id.ll_choose_photos);
+        final View view = inflater.inflate(R.layout.photos_chooser_dialog, root);  //inflate layout for dialog
+
+        //find view from layout inflated to handle click event
+        LinearLayout llTakePhotos = (LinearLayout) view.findViewById(R.id.ll_take_photos);
+        LinearLayout llChoosePhotos = (LinearLayout) view.findViewById(R.id.ll_choose_photos);
         llTakePhotos.setOnClickListener(this);
         llChoosePhotos.setOnClickListener(this);
-        alertDialogPhoto = new AlertDialog.Builder(getActivity()).create();
+
+        alertDialogPhoto = new AlertDialog.Builder(getActivity()).create();   //build dialog
         alertDialogPhoto.setTitle(getString(R.string.insert_photo));
         alertDialogPhoto.setIcon(R.drawable.ic_camera);
         alertDialogPhoto.setView(view);
-        alertDialogPhoto.show();
+        alertDialogPhoto.show(); //show dialog
     }
 
     private void showColorChooserDialog() {
         LayoutInflater inflater = LayoutInflater.from(getActivity());
-        View view = inflater.inflate(R.layout.color_chooser, null);
-        btnRed = (ImageView) view.findViewById(R.id.iv_color_red);
-        btnBlue = (ImageView) view.findViewById(R.id.iv_color_blue);
-        btnYellow = (ImageView) view.findViewById(R.id.iv_color_yellow);
-        btnGreen = (ImageView) view.findViewById(R.id.iv_color_green);
-        btnWhite = (ImageView) view.findViewById(R.id.iv_color_white);
+        View view = inflater.inflate(R.layout.color_chooser, root);
+        ImageView btnRed = (ImageView) view.findViewById(R.id.iv_color_red);
+        ImageView btnBlue = (ImageView) view.findViewById(R.id.iv_color_blue);
+        ImageView btnYellow = (ImageView) view.findViewById(R.id.iv_color_yellow);
+        ImageView btnGreen = (ImageView) view.findViewById(R.id.iv_color_green);
+        ImageView btnWhite = (ImageView) view.findViewById(R.id.iv_color_white);
 
         btnWhite.setOnClickListener(this);
         btnRed.setOnClickListener(this);
@@ -422,8 +417,8 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         alarmManager = (AlarmManager) getActivity().getSystemService(AppCompatActivity.ALARM_SERVICE);
         Intent intentToAlarmClass = new Intent(getActivity(), AlarmReceiver.class);
         Note itemNoteToNotify;
-        long createdDateTime = Common.parseStrDateTimeToMills(Common.getCurrentDateTimeInStr(NoteDatabase.SQL_DATE_FORMAT), NoteDatabase.SQL_DATE_FORMAT);
-        long notifyDateTime = Common.parseStrDateTimeToMills(strDateSelected + " " + strTimeSelected, NoteDatabase.SQL_DATE_FORMAT);
+        long createdDateTime = DateTimeUtils.parseStrDateTimeToMills(DateTimeUtils.getCurrentDateTimeInStr(NoteDatabase.SQL_DATE_FORMAT), NoteDatabase.SQL_DATE_FORMAT);
+        long notifyDateTime = DateTimeUtils.parseStrDateTimeToMills(strDateSelected + " " + strTimeSelected, NoteDatabase.SQL_DATE_FORMAT);
         Common.writeLog("Notify", notifyDateTime + "");
         itemNoteToNotify = new Note(getIdNoteToSave(), etTitle.getText().toString(), etContent.getText().toString(), selectedColor,
                 createdDateTime, notifyDateTime);

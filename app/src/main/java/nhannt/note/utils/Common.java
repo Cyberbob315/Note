@@ -1,5 +1,6 @@
 package nhannt.note.utils;
 
+
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.database.Cursor;
@@ -13,15 +14,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 
 import static android.content.Context.MODE_PRIVATE;
 
+
 /**
- * Created by IceMan on 12/30/2016.
+ * A class contains some common methods which used in many other classes
  */
 
 public class Common {
@@ -31,25 +29,6 @@ public class Common {
         Log.d(TAG + ": " + tag, content);
     }
 
-
-    public static String getCurrentDateTimeInStr(String strFormat) {
-        Calendar c = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat(strFormat);
-        String strDate = sdf.format(c.getTime());
-        return strDate;
-    }
-
-    public static Date convertStrToDate(String dateTimeInStr, String dateTmeFormat) {
-        SimpleDateFormat df = new SimpleDateFormat(dateTmeFormat);
-        Date date = null;
-        try {
-            date = df.parse(dateTimeInStr);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return date;
-    }
-
     /**
      * @return true when the caller API version is at least lollipop 21
      */
@@ -57,48 +36,12 @@ public class Common {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
     }
 
-
-    public static String getCurrentDayOfWeek() {
-        SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
-        Date d = new Date();
-        String dayOfTheWeek = sdf.format(d);
-        return dayOfTheWeek;
-    }
-
-    public static String getDateStrFromMilliseconds(long dateInMillis, String format) {
-        SimpleDateFormat formatter = new SimpleDateFormat(format);
-        String dateString = formatter.format(new Date(dateInMillis));
-        return dateString;
-    }
-
-    public static long parseStrDateTimeToMills(String strDateTime, String dateTimeFormat) {
-        SimpleDateFormat sdf = new SimpleDateFormat(dateTimeFormat);
-        long mills = 0;
-        try {
-            Date d = sdf.parse(strDateTime);
-            mills = d.getTime();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return mills;
-    }
-
-    public static String saveImage(Context mContext, Bitmap bitmap) {
-        ContextWrapper wrapper = new ContextWrapper(mContext);
-        File file = wrapper.getDir("Images", MODE_PRIVATE);
-        file = new File(file, "Image-" + getCurrentDateTimeInStr("yyyy-MM-dd$HH:mm:ss") + ".jpg");
-        try {
-            OutputStream stream = null;
-            stream = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-            stream.flush();
-            stream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return file.getAbsolutePath();
-    }
-
+    /**
+     *  Get real path of a file from uri's format
+     * @param mContext context calling this function
+     * @param uri uri of file want to get real path
+     * @return real path of the given uri
+     */
     public static String getRealPathFromURI(Context mContext, Uri uri) {
         if (uri == null) {
             return null;
@@ -109,9 +52,31 @@ public class Common {
             int column_index = cursor
                     .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             cursor.moveToFirst();
+            cursor.close();
             return cursor.getString(column_index);
         }
         return uri.getPath();
     }
 
+    /**
+     * Save a bitmap to storage in jpg format
+     * @param mContext context calling this function
+     * @param bitmap Bitmap of image to save
+     * @return file path of image just saved
+     */
+    public static String saveImage(Context mContext, Bitmap bitmap) {
+        ContextWrapper wrapper = new ContextWrapper(mContext);
+        File file = wrapper.getDir("Images", MODE_PRIVATE);
+        file = new File(file, "Image-" + DateTimeUtils.getCurrentDateTimeInStr("yyyy-MM-dd$HH:mm:ss") + ".jpg");
+        try {
+            OutputStream stream;
+            stream = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            stream.flush();
+            stream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return file.getAbsolutePath();
+    }
 }

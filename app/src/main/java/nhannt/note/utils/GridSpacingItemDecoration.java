@@ -5,7 +5,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 /**
- * Created by IceMan on 12/8/2016.
+ * A ItemDecoration class use for RecyclerView
+ * It will create space between item in RecyclerView with GridLayoutManager
+ * You need to pass number of columns, spacing length and if u want to padding left and right or not
  */
 
 public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
@@ -13,6 +15,12 @@ public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
     private int spacing;
     private boolean includeEdge;
 
+    /**
+     * Constructor
+     * @param spanCount number of columns of grid layout manager
+     * @param spacing space between element in recycler view
+     * @param includeEdge true if you want to spacing element with edges
+     */
     public GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
         this.spanCount = spanCount;
         this.spacing = spacing;

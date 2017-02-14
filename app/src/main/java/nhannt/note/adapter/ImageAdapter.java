@@ -19,6 +19,8 @@ import nhannt.note.R;
 
 /**
  * Created by IceMan on 1/13/2017.
+ * An adapter extended RecyclerView.Adapter to show Image on a RecyclerView
+ *
  */
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {
@@ -35,9 +37,8 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
 
     @Override
     public ImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mLayoutInflater.inflate(R.layout.item_image, null);
-        ImageViewHolder holder = new ImageViewHolder(view);
-        return holder;
+        View view = mLayoutInflater.inflate(R.layout.item_image, parent, false);
+        return new ImageViewHolder(view);
     }
 
     @Override
@@ -46,7 +47,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .priority(Priority.HIGH)
                 .into(holder.ivImage);
-        holder.id = position;
+        holder.id = holder.getAdapterPosition();
     }
 
     @Override

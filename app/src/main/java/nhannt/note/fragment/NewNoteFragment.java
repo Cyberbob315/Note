@@ -12,11 +12,11 @@ import nhannt.note.R;
 import nhannt.note.adapter.ImageAdapter;
 import nhannt.note.base.BaseFragment;
 import nhannt.note.model.Note;
-import nhannt.note.utils.Common;
 import nhannt.note.utils.Constant;
+import nhannt.note.utils.DateTimeUtils;
 
 /**
- * Created by iceman on 1/23/2017.
+ * A fragment extends base fragment and contains some other method for creating new note
  */
 
 public class NewNoteFragment extends BaseFragment {
@@ -65,13 +65,18 @@ public class NewNoteFragment extends BaseFragment {
 
     @Override
     protected void setUpTextViewAndDateTime() {
-        tvCurrentTime.setText(Common.getCurrentDateTimeInStr(Constant.DATE_FORMAT));
+        tvCurrentTime.setText(DateTimeUtils.getCurrentDateTimeInStr(Constant.DATE_FORMAT));
         isFirstDateSpSelected = false;
         isFirstTimeSpSelected = false;
         selectedColor = ContextCompat.getColor(getActivity(), R.color.white);
-        strDateSelected = Common.getCurrentDateTimeInStr(Constant.DATE_FORMAT);
+        strDateSelected = DateTimeUtils.getCurrentDateTimeInStr(Constant.DATE_FORMAT);
         strTimeSelected = getString(R.string.sp_time_slot1);
 
+    }
+
+    @Override
+    protected int getHomeAsUpIndicator() {
+        return R.mipmap.ic_launcher;
     }
 
     @Override
@@ -85,6 +90,7 @@ public class NewNoteFragment extends BaseFragment {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void showImage(ArrayList lstImage) {
         lstImage = new ArrayList();
         mImageAdapter = new ImageAdapter(getActivity(), lstImage);

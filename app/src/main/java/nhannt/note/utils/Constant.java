@@ -2,6 +2,10 @@ package nhannt.note.utils;
 
 /**
  * Created by iceman on 1/23/2017.
+ *
+ * Class contains constant variables such as action, date time format,request key,..
+ *
+ * @author nhannt
  */
 
 public class Constant {
@@ -17,6 +21,5 @@ public class Constant {
 
     public static final String TIME_FORMAT = "HH:mm";
     public static final String DATE_FORMAT = "yyyy-MM-dd";
-    public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm";
 
 }

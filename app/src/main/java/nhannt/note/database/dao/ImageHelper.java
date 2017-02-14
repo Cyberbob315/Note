@@ -11,7 +11,7 @@ import nhannt.note.base.IDAOHandle;
 import nhannt.note.database.NoteDatabase;
 
 /**
- * Created by nhannt on 2/8/17.
+ * A class implements IDAOHandle for accessing and saving Images of a note from database
  */
 
 public class ImageHelper implements IDAOHandle<String, Integer> {
@@ -26,7 +26,7 @@ public class ImageHelper implements IDAOHandle<String, Integer> {
         return mInstance;
     }
 
-    public ImageHelper(Context mContext) {
+    private ImageHelper(Context mContext) {
         mDatabase = NoteDatabase.getInstance(mContext);
     }
 
@@ -55,7 +55,7 @@ public class ImageHelper implements IDAOHandle<String, Integer> {
         valuesImage.put(NoteDatabase.TBL_IMAGE_COLUMN_NOTE_ID, noteId);
         valuesImage.put(NoteDatabase.TBL_IMAGE_COLUMN_PATH, path);
         long result = mDatabase.insertRecord(NoteDatabase.TBL_IMAGE, valuesImage);
-        isSuccess = result > -1 ? true : false;
+        isSuccess = result > -1;
         return isSuccess;
     }
 
@@ -69,7 +69,7 @@ public class ImageHelper implements IDAOHandle<String, Integer> {
         boolean isSuccess;
         long result = mDatabase.deleteRecord(NoteDatabase.TBL_IMAGE, NoteDatabase.TBL_IMAGE_COLUMN_NOTE_ID,
                 new String[]{noteId + ""});
-        isSuccess = result > 0 ? true : false;
+        isSuccess = result > 0;
         return isSuccess;
     }
 }

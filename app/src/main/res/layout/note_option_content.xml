@@ -3,19 +3,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:layout_below="@id/toolbar"
+    android:layout_below="@+id/toolbar"
     tools:context="nhannt.note.fragment.EditNoteFragment">
 
     <ImageView
         android:id="@+id/iv_background_detail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar" />
+        android:contentDescription="@string/contentDescriptionBackGround"/>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -37,7 +36,8 @@
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:gravity="end"
                 android:paddingRight="@dimen/activity_horizontal_margin"
-                android:text="Today" />
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:text="@string/today" />
 
             <EditText
                 android:id="@+id/et_title"
@@ -45,7 +45,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:hint="@string/enter_title"
-                android:paddingLeft="@dimen/edt_title_content_padding_left" />
+                android:paddingLeft="@dimen/edt_title_content_padding_horizontal"
+                android:paddingRight="@dimen/edt_title_content_padding_horizontal"/>
 
 
             <EditText
@@ -54,7 +55,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:hint="@string/enter_content"
-                android:paddingLeft="@dimen/edt_title_content_padding_left" />
+                android:paddingLeft="@dimen/edt_title_content_padding_horizontal"
+                android:paddingRight="@dimen/edt_title_content_padding_horizontal"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -68,14 +70,15 @@
                     android:layout_height="40dp"
                     android:layout_centerVertical="true"
                     android:padding="10dp"
-                    android:src="@drawable/ic_alarm" />
+                    android:src="@drawable/ic_alarm_black_24dp"
+                    android:contentDescription="@string/contentDescriptionAlarm"/>
 
                 <TextView
                     android:id="@+id/tv_alarm"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_centerVertical="true"
-                    android:layout_toRightOf="@+id/iv_alarm"
+                    android:layout_toEndOf="@+id/iv_alarm"
                     android:text="@string/alarm"
                     android:textSize="@dimen/text_size_big" />
 
@@ -84,8 +87,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_toRightOf="@id/iv_alarm"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:layout_toEndOf="@id/iv_alarm"
                     android:orientation="horizontal"
                     android:visibility="gone">
 
@@ -107,7 +110,8 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:overScrollMode="never"
-                        android:src="@drawable/ic_close" />
+                        android:src="@drawable/ic_close"
+                        android:contentDescription="@string/contentDescriptionDateTimeClose"/>
                 </LinearLayout>
             </RelativeLayout>
 

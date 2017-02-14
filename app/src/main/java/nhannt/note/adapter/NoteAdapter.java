@@ -14,11 +14,13 @@ import java.util.ArrayList;
 import nhannt.note.R;
 import nhannt.note.activity.DetailActivity;
 import nhannt.note.model.Note;
-import nhannt.note.utils.Common;
 import nhannt.note.utils.Constant;
+import nhannt.note.utils.DateTimeUtils;
 
 /**
  * Created by IceMan on 12/30/2016.
+ *
+ * An adapter extended RecyclerView.Adapter to show Note on a RecyclerView
  */
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
@@ -35,9 +37,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
 
     @Override
     public NoteViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mLayoutInflater.inflate(R.layout.item_note_main, null);
-        NoteViewHolder holder = new NoteViewHolder(view);
-        return holder;
+        View view = mLayoutInflater.inflate(R.layout.item_note_main, parent, false);
+        return new NoteViewHolder(view);
     }
 
     @Override
@@ -45,8 +46,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
         holder.tvNoteTitle.setText(mData.get(position).getTitle());
         holder.tvNoteContent.setText(mData.get(position).getContent());
         holder.cardView.setCardBackgroundColor(mData.get(position).getColor());
-        holder.tvNoteDate.setText(Common.getDateStrFromMilliseconds(mData.get(position).getCreatedDate(), "yyyy-MM-dd"));
-        holder.pos = position;
+        holder.tvNoteDate.setText(DateTimeUtils.getDateStrFromMilliseconds(mData.get(position).getCreatedDate(), "yyyy-MM-dd"));
+        holder.pos = holder.getAdapterPosition();
     }
 
     @Override

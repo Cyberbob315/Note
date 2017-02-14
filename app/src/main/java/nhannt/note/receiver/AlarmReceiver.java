@@ -12,11 +12,11 @@ import java.util.ArrayList;
 import nhannt.note.R;
 import nhannt.note.activity.DetailActivity;
 import nhannt.note.model.Note;
-import nhannt.note.utils.Common;
 import nhannt.note.utils.Constant;
 
 /**
- * Created by IceMan on 1/20/2017.
+ * A BroadcastReceiver which receive data when a note come to notify time,it will push
+ * a notification with a pending intent to go to detail activity
  */
 
 public class AlarmReceiver extends BroadcastReceiver {
@@ -28,23 +28,31 @@ public class AlarmReceiver extends BroadcastReceiver {
         Note itemNoteReceived;
         if (intent != null) {
             itemNoteReceived = (Note) intent.getExtras().getSerializable(KEY_NOTE_TO_NOTIFY);
-            //Show notification
+            String title = "";
+            int noteId = 0;
+            //Build notification
+            if (itemNoteReceived != null) {
+                title = itemNoteReceived.getTitle();    //get title of note to show on notification
+                noteId = itemNoteReceived.getId();      //get id of note to create an unique pending intent
+            }
             NotificationCompat.Builder mBuilder
                     = (android.support.v7.app.NotificationCompat.Builder) new NotificationCompat.Builder(context)
                     .setSmallIcon(R.mipmap.ic_launcher)
-                    .setContentTitle(itemNoteReceived.getTitle())
+                    .setContentTitle(title)
                     .setAutoCancel(true);
+            //Create intent and push note data for detail activity
             Intent intentToDetailActivity = new Intent(context, DetailActivity.class);
             ArrayList<Note> lstNote = new ArrayList<>();
             lstNote.add(itemNoteReceived);
             intentToDetailActivity.putExtra(Constant.KEY_LIST_NOTE, lstNote);
             intentToDetailActivity.putExtra(Constant.KEY_NOTE_POSITION, 0);
             intentToDetailActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            Common.writeLog("color", itemNoteReceived.getColor() + "");
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, itemNoteReceived.getId(), intentToDetailActivity, 0);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, noteId, intentToDetailActivity, 0);
             mBuilder.setContentIntent(pendingIntent);
+
+            //Show notification
             NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            mNotificationManager.notify(itemNoteReceived.getId(), mBuilder.build());
+            mNotificationManager.notify(noteId, mBuilder.build());
         }
     }
 }
