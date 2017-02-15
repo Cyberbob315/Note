@@ -58,12 +58,11 @@ import nhannt.note.utils.GridSpacingItemDecoration;
 public abstract class BaseFragment extends Fragment implements View.OnClickListener, Spinner.OnItemSelectedListener {
 
     private Context mContext;
-    protected NoteHelper mNoteHelper = NoteHelper.getInstance(getActivity());
-    protected ImageHelper mImageHelper = ImageHelper.getInstance(getActivity());
+    protected final NoteHelper mNoteHelper = NoteHelper.getInstance(getActivity());
+    protected final ImageHelper mImageHelper = ImageHelper.getInstance(getActivity());
     private View mView;
     protected Note mItemNote;
     protected int lastNoteId, selectedColor;
-    protected NoteDatabase mDatabase = NoteDatabase.getInstance(getActivity());
     protected String strDateSelected = "", strTimeSelected = "";
     private AlertDialog alertDialogPhoto, alertDialogColor;
     private AlarmManager alarmManager;
@@ -354,7 +353,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         }
     }
 
-    private DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
+    private final DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
             strDateSelected = year + "-" + (month + 1) + "-" + dayOfMonth;
@@ -365,7 +364,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     };
 
 
-    private TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
+    private final TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             strTimeSelected = hourOfDay + ":" + minute;
@@ -377,7 +376,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
 
     private void showPhotoChooserDialog() {
         LayoutInflater inflater = LayoutInflater.from(getActivity());
-        final View view = inflater.inflate(R.layout.photos_chooser_dialog, root);  //inflate layout for dialog
+        final View view = inflater.inflate(R.layout.photos_chooser_dialog, root, false);  //inflate layout for dialog
 
         //find view from layout inflated to handle click event
         LinearLayout llTakePhotos = (LinearLayout) view.findViewById(R.id.ll_take_photos);
@@ -394,7 +393,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
 
     private void showColorChooserDialog() {
         LayoutInflater inflater = LayoutInflater.from(getActivity());
-        View view = inflater.inflate(R.layout.color_chooser, root);
+        View view = inflater.inflate(R.layout.color_chooser, root, false);
         ImageView btnRed = (ImageView) view.findViewById(R.id.iv_color_red);
         ImageView btnBlue = (ImageView) view.findViewById(R.id.iv_color_blue);
         ImageView btnYellow = (ImageView) view.findViewById(R.id.iv_color_yellow);

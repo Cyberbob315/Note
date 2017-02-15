@@ -25,9 +25,9 @@ import nhannt.note.utils.DateTimeUtils;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
 
-    private Context mContext;
-    private ArrayList<Note> mData;
-    private LayoutInflater mLayoutInflater;
+    private final Context mContext;
+    private final ArrayList<Note> mData;
+    private final LayoutInflater mLayoutInflater;
 
     public NoteAdapter(Context mContext, ArrayList<Note> mData) {
         this.mContext = mContext;
@@ -57,13 +57,13 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
 
     public class NoteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        int pos;
-        TextView tvNoteTitle;
-        TextView tvNoteContent;
-        TextView tvNoteDate;
-        CardView cardView;
+        private int pos;
+        private final TextView tvNoteTitle;
+        private final TextView tvNoteContent;
+        private final TextView tvNoteDate;
+        private final CardView cardView;
 
-        public NoteViewHolder(View itemView) {
+        private NoteViewHolder(View itemView) {
             super(itemView);
             tvNoteContent = (TextView) itemView.findViewById(R.id.tv_content_note_item);
             tvNoteTitle = (TextView) itemView.findViewById(R.id.tv_title_note_item);

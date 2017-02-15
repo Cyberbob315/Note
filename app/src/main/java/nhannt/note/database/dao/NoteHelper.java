@@ -18,7 +18,7 @@ import nhannt.note.model.Note;
 public class NoteHelper implements IDAOHandle<Note, Integer> {
 
     private static NoteHelper mInstance;
-    private NoteDatabase mDatabase;
+    private final NoteDatabase mDatabase;
 
     public static NoteHelper getInstance(Context mContext) {
         if (mInstance == null) {

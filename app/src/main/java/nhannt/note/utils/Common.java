@@ -52,8 +52,9 @@ public class Common {
             int column_index = cursor
                     .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             cursor.moveToFirst();
+            String path = cursor.getString(column_index);
             cursor.close();
-            return cursor.getString(column_index);
+            return path;
         }
         return uri.getPath();
     }

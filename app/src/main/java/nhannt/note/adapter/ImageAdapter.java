@@ -25,9 +25,9 @@ import nhannt.note.R;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {
 
-    private Context mContext;
-    private ArrayList<String> mData;
-    private LayoutInflater mLayoutInflater;
+    private final Context mContext;
+    private final ArrayList<String> mData;
+    private final LayoutInflater mLayoutInflater;
 
     public ImageAdapter(Context mContext, ArrayList<String> mData) {
         this.mContext = mContext;
@@ -57,11 +57,11 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
 
     public class ImageViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        int id;
-        ImageView ivImage;
-        ImageView btDelete;
+        private int id;
+        private final ImageView ivImage;
+        private final ImageView btDelete;
 
-        public ImageViewHolder(View itemView) {
+        private ImageViewHolder(View itemView) {
             super(itemView);
             ivImage = (ImageView) itemView.findViewById(R.id.iv_image_item);
             btDelete = (ImageView) itemView.findViewById(R.id.bt_delete_image_item);

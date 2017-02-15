@@ -17,7 +17,7 @@ import nhannt.note.database.NoteDatabase;
 public class ImageHelper implements IDAOHandle<String, Integer> {
 
     private static ImageHelper mInstance;
-    private NoteDatabase mDatabase;
+    private final NoteDatabase mDatabase;
 
     public static ImageHelper getInstance(Context mContext) {
         if (mInstance == null) {

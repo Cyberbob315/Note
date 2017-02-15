@@ -15,7 +15,7 @@ import nhannt.note.model.Note;
 
 public class NoteViewPagerAdapter extends FragmentPagerAdapter {
 
-    private ArrayList<Note> mData;
+    private final ArrayList<Note> mData;
 
     public NoteViewPagerAdapter(FragmentManager fm, ArrayList<Note> mData) {
         super(fm);

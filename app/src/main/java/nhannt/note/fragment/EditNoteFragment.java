@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import nhannt.note.R;
 import nhannt.note.adapter.ImageAdapter;
 import nhannt.note.base.BaseFragment;
-import nhannt.note.database.NoteDatabase;
 import nhannt.note.model.Note;
 import nhannt.note.utils.Common;
 import nhannt.note.utils.Constant;
@@ -125,7 +124,7 @@ public class EditNoteFragment extends BaseFragment {
         builder.setPositiveButton(getString(R.string.btn_yes), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mDatabase.deleteRecord(NoteDatabase.TBL_NOTE, NoteDatabase.TBL_NOTE_COLUMN_ID, new String[]{noteId + ""});
+                mNoteHelper.delete(noteId);
                 Intent intent = new Intent(Constant.ACTION_REFRESH_LIST);
                 getActivity().sendBroadcast(intent);
                 dialog.dismiss();

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:background="@color/light_grey">
+    style="@style/MyTheme">
 
     <ImageView
         android:id="@+id/iv_color_white"

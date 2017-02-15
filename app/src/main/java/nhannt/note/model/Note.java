@@ -7,12 +7,12 @@ import java.io.Serializable;
  */
 
 public class Note implements Serializable {
-    private int id;
-    private String title;
-    private String content;
-    private int color;
-    private long createdDate;
-    private long notifyDate;
+    private final int id;
+    private final String title;
+    private final String content;
+    private final int color;
+    private final long createdDate;
+    private final long notifyDate;
 
     public Note(int id, String title, String content, int color, long createdDate, long notifyDate) {
         this.id = id;
@@ -33,9 +33,6 @@ public class Note implements Serializable {
     }
 
     public String getTitle() {
-        if (title == null) {
-            title = "";
-        }
         return title;
     }
 
