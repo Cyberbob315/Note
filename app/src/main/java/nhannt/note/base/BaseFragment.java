@@ -35,8 +35,10 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+
 import java.util.ArrayList;
 import java.util.Calendar;
+
 import nhannt.note.R;
 import nhannt.note.activity.HostActivity;
 import nhannt.note.adapter.ImageAdapter;
@@ -103,6 +105,11 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         mContext = context;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -116,8 +123,10 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
         inflater.inflate(R.menu.menu_edit_note, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+
     }
 
     @Override
@@ -130,6 +139,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         setUpImageList();
         setupSpinnerDateNSpinnerTime();
         setUpTextViewAndDateTime();
+
     }
 
 
@@ -290,7 +300,6 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
                 break;
         }
     }
-
 
 
     private String getActionbarName() {
