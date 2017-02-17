@@ -7,6 +7,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -105,10 +106,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         mContext = context;
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
+
 
     @Nullable
     @Override
@@ -120,13 +118,11 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
 
     protected abstract int getLayout();
 
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         inflater.inflate(R.menu.menu_edit_note, menu);
         super.onCreateOptionsMenu(menu, inflater);
-
     }
 
     @Override
@@ -139,7 +135,6 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         setUpImageList();
         setupSpinnerDateNSpinnerTime();
         setUpTextViewAndDateTime();
-
     }
 
 
@@ -217,6 +212,8 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     private void settingToolbar(View view) {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         if (toolbar != null) {
+            Drawable drawable = ContextCompat.getDrawable(getActivity(),R.drawable.ic_option_menu);
+            toolbar.setOverflowIcon(drawable);
             ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
             ActionBar actionBar = getActionBar();
             if (actionBar != null) {
@@ -225,6 +222,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
                 if (getHomeAsUpIndicator() != 0) {
                     actionBar.setHomeAsUpIndicator(getHomeAsUpIndicator());
                 }
+
                 actionBar.setTitle(getActionbarName());
             }
         }

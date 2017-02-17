@@ -76,7 +76,7 @@ public class NewNoteFragment extends BaseFragment {
 
     @Override
     protected int getHomeAsUpIndicator() {
-        return R.mipmap.ic_launcher;
+        return R.drawable.ic_back;
     }
 
     @Override

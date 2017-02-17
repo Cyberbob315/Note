@@ -16,7 +16,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_camera"
+            android:src="@drawable/ic_camera_dark"
             android:contentDescription="@string/contentDescriptionCamera"/>
 
         <TextView
@@ -36,7 +36,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_gallery"
+            android:src="@drawable/ic_gallery_dark"
             android:contentDescription="@string/contentDescriptionGallery"/>
 
         <TextView

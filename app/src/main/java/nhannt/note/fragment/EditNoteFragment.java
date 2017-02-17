@@ -149,7 +149,7 @@ public class EditNoteFragment extends BaseFragment {
 
     @Override
     protected int getHomeAsUpIndicator() {
-        return R.mipmap.ic_launcher;
+        return R.drawable.ic_back;
     }
 
     private class LoadImageOfNote extends AsyncTask<Void, Void, Void> {

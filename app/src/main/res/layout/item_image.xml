@@ -13,8 +13,11 @@
     <ImageView
         android:id="@+id/bt_delete_image_item"
         android:src="@drawable/ic_close"
-        android:layout_width="@dimen/delete_photo_btn_height_width"
-        android:layout_height="@dimen/delete_photo_btn_height_width"
+        android:adjustViewBounds="true"
+        android:background="?attr/selectableItemBackground"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:contentDescription="@string/contentDescriptionDeleteImage"/>
