@@ -5,17 +5,17 @@
         android:id="@+id/bt_choose_picture_menu"
         android:icon="@drawable/ic_camera"
         android:title="@string/choose_photo"
-        app:showAsAction="always"/>
+        app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/bt_choose_color_menu"
         android:icon="@drawable/ic_color_selector"
         android:title="@string/select_color"
-        app:showAsAction="always"/>
+        app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/bt_done_menu"
         android:icon="@drawable/ic_check"
         android:title="@string/btn_ok"
-        app:showAsAction="always"/>
+        app:showAsAction="ifRoom"/>
     <item
         android:icon="@drawable/ic_add_new"
         android:id="@+id/bt_new_note_menu"
