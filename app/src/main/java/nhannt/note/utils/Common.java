@@ -3,17 +3,21 @@ package nhannt.note.utils;
 
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+
+import nhannt.note.R;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -79,5 +83,25 @@ public class Common {
             e.printStackTrace();
         }
         return file.getAbsolutePath();
+    }
+
+    /**
+     * Show a simple warning dialog
+     * @param context Context calling this dialog
+     * @param title Title of the warning message
+     * @param message Content of the warning message
+     */
+    public static void showDialog(Context context, String title, String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.setPositiveButton(context.getString(R.string.close), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        builder.create().show();
     }
 }

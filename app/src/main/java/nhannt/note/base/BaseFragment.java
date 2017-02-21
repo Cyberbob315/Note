@@ -107,7 +107,6 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     }
 
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -136,6 +135,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         setupSpinnerDateNSpinnerTime();
         setUpTextViewAndDateTime();
     }
+
 
 
     protected abstract void setUpTextViewAndDateTime();
@@ -184,12 +184,21 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     protected abstract int getIdNoteToSave();
 
     private void saveNoteToDatabase() {
-        String dateTime = strDateSelected + " " + strTimeSelected;
-        long dateCreated = DateTimeUtils.parseStrDateTimeToMills(DateTimeUtils.getCurrentDateTimeInStr(NoteDatabase.SQL_DATE_FORMAT), NoteDatabase.SQL_DATE_FORMAT);
-        long dateNotify = DateTimeUtils.parseStrDateTimeToMills(dateTime, NoteDatabase.SQL_DATE_FORMAT);
-        Note itemNoteToSave = new Note(getIdNoteToSave(), etTitle.getText().toString(), etContent.getText().toString(),
-                selectedColor, dateCreated, dateNotify);
-        saveNote(itemNoteToSave);
+            String dateTime = strDateSelected + " " + strTimeSelected;
+            long dateCreated = DateTimeUtils.parseStrDateTimeToMills(DateTimeUtils.getCurrentDateTimeInStr(NoteDatabase.SQL_DATE_FORMAT), NoteDatabase.SQL_DATE_FORMAT);
+            long dateNotify = DateTimeUtils.parseStrDateTimeToMills(dateTime, NoteDatabase.SQL_DATE_FORMAT);
+            Note itemNoteToSave = new Note(getIdNoteToSave(), etTitle.getText().toString(), etContent.getText().toString(),
+                    selectedColor, dateCreated, dateNotify);
+            saveNote(itemNoteToSave);
+    }
+
+    private boolean validateTitle() {
+        boolean isEntered = true;
+        if (etTitle.getText().toString().isEmpty()) {
+            Common.showDialog(getActivity(), getString(R.string.warning_title), getString(R.string.warning_content));
+            isEntered = false;
+        }
+        return isEntered;
     }
 
     protected abstract void saveNote(Note itemNoteToSave);
@@ -212,7 +221,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     private void settingToolbar(View view) {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         if (toolbar != null) {
-            Drawable drawable = ContextCompat.getDrawable(getActivity(),R.drawable.ic_option_menu);
+            Drawable drawable = ContextCompat.getDrawable(getActivity(), R.drawable.ic_option_menu);
             toolbar.setOverflowIcon(drawable);
             ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
             ActionBar actionBar = getActionBar();
@@ -238,6 +247,9 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
                 showColorChooserDialog();
                 break;
             case R.id.bt_done_menu:
+                if (!validateTitle()) {
+                    break;
+                }
                 saveNoteToDatabase();
                 setAlarm();
                 break;

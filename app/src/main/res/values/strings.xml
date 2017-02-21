@@ -6,6 +6,9 @@
     <string name="btn_ok">OK</string>
     <string name="btn_cancel">Cancel</string>
     <string name="date">Date</string>
+    <string name="close">Close</string>
+    <string name="warning_title">Warning!</string>
+    <string name="warning_content">You need to enter note title!</string>
     <!-- New Activity , Detail Activity -->
     <string name="new_note">New Note</string>
     <string name="share">Share</string>
