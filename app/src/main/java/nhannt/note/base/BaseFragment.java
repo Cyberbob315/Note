@@ -89,8 +89,9 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     protected ImageAdapter mImageAdapter;
     protected boolean isFirstTimeSpSelected, isFirstDateSpSelected;
     private ViewGroup root;
-    protected boolean isChanged = false;
-    protected BaseActivity mActivity;
+    private boolean isChanged = false;
+    private BaseActivity mActivity;
+
 
     public BaseFragment() {
         // Required empty public constructor

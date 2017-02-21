@@ -10,7 +10,6 @@ import nhannt.note.listener.OnBackPressedListener;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
-    private Toolbar toolbar;
     private OnBackPressedListener mOnBackPressedListener;
 
     @Override
@@ -21,13 +20,13 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     private void settingToolbar() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             ActionBar actionBar = getSupportActionBar();
             if (actionBar != null) {
-                actionBar.setDisplayHomeAsUpEnabled(true);
-                actionBar.setDisplayShowTitleEnabled(true);
+                actionBar.setDisplayHomeAsUpEnabled(false);
+                actionBar.setDisplayShowTitleEnabled(false);
             }
         }
     }

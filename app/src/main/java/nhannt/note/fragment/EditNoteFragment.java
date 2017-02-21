@@ -152,8 +152,6 @@ public class EditNoteFragment extends BaseFragment {
         return R.drawable.ic_back;
     }
 
-
-    @SuppressWarnings("unchecked")
     private class LoadImageOfNote extends AsyncTask<Void, Void, Void> {
 
 
@@ -163,6 +161,7 @@ public class EditNoteFragment extends BaseFragment {
             return null;
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         protected void onPostExecute(Void aVoid) {
             mImageAdapter = new ImageAdapter(getActivity(), lstImagePath);
