@@ -4,17 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 
 import java.util.ArrayList;
 
 import nhannt.note.R;
 import nhannt.note.adapter.NoteViewPagerAdapter;
+import nhannt.note.base.BaseActivity;
 import nhannt.note.model.Note;
 import nhannt.note.utils.Constant;
 
-public class DetailActivity extends AppCompatActivity {
+public class DetailActivity extends BaseActivity {
 
 
     private ViewPager mNoteViewPager;
@@ -23,12 +22,10 @@ public class DetailActivity extends AppCompatActivity {
     private int notePos;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         initControls();
         setupToolbar();
         getDataFromIntent();
@@ -38,6 +35,11 @@ public class DetailActivity extends AppCompatActivity {
 
         setUpViewPager();
 
+    }
+
+    @Override
+    protected int getLayout() {
+        return R.layout.activity_detail;
     }
 
     private void setupToolbar() {

@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -20,6 +21,8 @@ import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -46,6 +49,7 @@ import nhannt.note.adapter.ImageAdapter;
 import nhannt.note.database.NoteDatabase;
 import nhannt.note.database.dao.ImageHelper;
 import nhannt.note.database.dao.NoteHelper;
+import nhannt.note.listener.OnBackPressedListener;
 import nhannt.note.model.Note;
 import nhannt.note.receiver.AlarmReceiver;
 import nhannt.note.utils.Common;
@@ -58,13 +62,15 @@ import nhannt.note.utils.GridSpacingItemDecoration;
  * An abstract fragment which contains all methods use to display,save note for EditNoteFragment and NewNoteFragment
  */
 
-public abstract class BaseFragment extends Fragment implements View.OnClickListener, Spinner.OnItemSelectedListener {
+public abstract class BaseFragment extends Fragment implements View.OnClickListener, Spinner.OnItemSelectedListener,
+        OnBackPressedListener{
+
 
     private Context mContext;
     protected final NoteHelper mNoteHelper = NoteHelper.getInstance(getActivity());
     protected final ImageHelper mImageHelper = ImageHelper.getInstance(getActivity());
     private View mView;
-    protected Note mItemNote;
+    protected Note mItemNote,itemNoteToSave;
     protected int lastNoteId, selectedColor;
     protected String strDateSelected = "", strTimeSelected = "";
     private AlertDialog alertDialogPhoto, alertDialogColor;
@@ -79,11 +85,12 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     protected ImageView ivBackGround;
     private ArrayAdapter spDateAdapter, spTimeAdapter;
     protected ArrayList<String> lstDate, lstTime;
-    protected ArrayList<String> lstImagePath = new ArrayList<>();
+    protected ArrayList<String> lstImagePath = new ArrayList<>(),lstImagePathOld = new ArrayList<>();
     protected ImageAdapter mImageAdapter;
     protected boolean isFirstTimeSpSelected, isFirstDateSpSelected;
     private ViewGroup root;
-
+    protected boolean isChanged = false;
+    protected BaseActivity mActivity;
 
     public BaseFragment() {
         // Required empty public constructor
@@ -112,6 +119,8 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         root = container;
+        mActivity = (BaseActivity) getActivity();
+        mActivity.setOnBackPressedListener(this);
         return inflater.inflate(getLayout(), container, false);
     }
 
@@ -134,9 +143,58 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         setUpImageList();
         setupSpinnerDateNSpinnerTime();
         setUpTextViewAndDateTime();
+        isChanged = false;
     }
 
 
+    @Override
+    public void doBack() {
+
+        if(lstImagePath.size() != lstImagePathOld.size()){
+            isChanged = true;
+        }
+        if(mItemNote != null){
+            String dateTime = strDateSelected + " " + strTimeSelected;
+            long dateNotify = DateTimeUtils.parseStrDateTimeToMills(dateTime, NoteDatabase.SQL_DATE_FORMAT);
+            if(dateNotify != mItemNote.getNotifyDate()){
+                isChanged = true;
+            }
+        }
+
+        if(!isChanged){
+            mActivity.setOnBackPressedListener(null);
+            mActivity.onBackPressed();
+        }else{
+            showConfirmSaveDialog();
+        }
+    }
+
+    private void showConfirmSaveDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(getString(R.string.warning_title));
+        builder.setMessage(getString(R.string.save_warning));
+        builder.setPositiveButton(getActivity().getString(R.string.save), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (validateTitle()) {
+                    saveNoteToDatabase();
+                    setAlarm();
+                    mActivity.setOnBackPressedListener(null);
+                    mActivity.onBackPressed();
+                }
+            }
+        });
+        builder.setNegativeButton(getActivity().getString(R.string.discard), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                mActivity.setOnBackPressedListener(null);
+                mActivity.onBackPressed();
+            }
+        });
+
+        builder.create().show();
+    }
 
     protected abstract void setUpTextViewAndDateTime();
 
@@ -145,6 +203,25 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         btCloseDateTime.setOnClickListener(this);
         spDate.setOnItemSelectedListener(this);
         spTime.setOnItemSelectedListener(this);
+        TextWatcher textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                isChanged = true;
+                Common.writeLog("changed = true","change text");
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        };
+        etTitle.addTextChangedListener(textWatcher);
+        etContent.addTextChangedListener(textWatcher);
     }
 
     @SuppressWarnings("unchecked")
@@ -187,7 +264,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
             String dateTime = strDateSelected + " " + strTimeSelected;
             long dateCreated = DateTimeUtils.parseStrDateTimeToMills(DateTimeUtils.getCurrentDateTimeInStr(NoteDatabase.SQL_DATE_FORMAT), NoteDatabase.SQL_DATE_FORMAT);
             long dateNotify = DateTimeUtils.parseStrDateTimeToMills(dateTime, NoteDatabase.SQL_DATE_FORMAT);
-            Note itemNoteToSave = new Note(getIdNoteToSave(), etTitle.getText().toString(), etContent.getText().toString(),
+            itemNoteToSave = new Note(getIdNoteToSave(), etTitle.getText().toString(), etContent.getText().toString(),
                     selectedColor, dateCreated, dateNotify);
             saveNote(itemNoteToSave);
     }
@@ -250,6 +327,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
                 if (!validateTitle()) {
                     break;
                 }
+                mActivity.setOnBackPressedListener(null);
                 saveNoteToDatabase();
                 setAlarm();
                 break;
@@ -297,6 +375,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
                     String path = Common.saveImage(getActivity(), photo); //save to storage then get path
                     lstImagePath.add(path);
                     mImageAdapter.refreshList((ArrayList<String>) lstImagePath.clone());
+                    isChanged = true;
                 }
                 break;
             case Constant.GALLERY_REQUEST:
@@ -306,6 +385,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
                     Log.d("image", selectedImagePath);
                     lstImagePath.add(selectedImagePath);
                     mImageAdapter.refreshList((ArrayList<String>) lstImagePath.clone());
+                    isChanged = true;
                 }
                 break;
         }
@@ -348,26 +428,36 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
                 selectedColor = ContextCompat.getColor(getActivity(), R.color.blue);
                 ivBackGround.setBackgroundColor(selectedColor);
                 alertDialogColor.dismiss();
+                Common.writeLog("changed = true","change color");
+                isChanged = true;
                 break;
             case R.id.iv_color_red:
                 selectedColor = ContextCompat.getColor(getActivity(), R.color.colorRed);
                 ivBackGround.setBackgroundColor(selectedColor);
+                Common.writeLog("changed = true","change color");
                 alertDialogColor.dismiss();
+                isChanged = true;
                 break;
             case R.id.iv_color_yellow:
                 selectedColor = ContextCompat.getColor(getActivity(), R.color.yellow);
                 ivBackGround.setBackgroundColor(selectedColor);
+                Common.writeLog("changed = true","change color");
                 alertDialogColor.dismiss();
+                isChanged = true;
                 break;
             case R.id.iv_color_green:
                 selectedColor = ContextCompat.getColor(getActivity(), R.color.green);
                 ivBackGround.setBackgroundColor(selectedColor);
+                Common.writeLog("changed = true","change color");
                 alertDialogColor.dismiss();
+                isChanged = true;
                 break;
             case R.id.iv_color_white:
                 selectedColor = ContextCompat.getColor(getActivity(), R.color.white);
                 ivBackGround.setBackgroundColor(selectedColor);
+                Common.writeLog("changed = true","change color");
                 alertDialogColor.dismiss();
+                isChanged = true;
                 break;
         }
     }

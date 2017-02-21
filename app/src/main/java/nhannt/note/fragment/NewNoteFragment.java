@@ -96,4 +96,5 @@ public class NewNoteFragment extends BaseFragment {
         mImageAdapter = new ImageAdapter(getActivity(), lstImage);
         rvImageList.setAdapter(mImageAdapter);
     }
+
 }

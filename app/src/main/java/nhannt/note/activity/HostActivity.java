@@ -5,26 +5,32 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
-
 import nhannt.note.R;
+import nhannt.note.base.BaseActivity;
 import nhannt.note.fragment.NewNoteFragment;
 import nhannt.note.model.Note;
 import nhannt.note.utils.Constant;
 
-public class HostActivity extends AppCompatActivity {
+public class HostActivity extends BaseActivity {
 
     private Note itemNote;
     private int lastNoteId;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_host);
         getDataFromIntent();
         NewNoteFragment newNoteFragment = NewNoteFragment.newInstance(itemNote, lastNoteId);
         showFragment(newNoteFragment, NewNoteFragment.TAG);
     }
+
+    @Override
+    protected int getLayout() {
+        return R.layout.activity_host;
+    }
+
+
 
     private void getDataFromIntent() {
         Intent intent = getIntent();

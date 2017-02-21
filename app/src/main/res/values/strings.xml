@@ -26,6 +26,9 @@
     <string name="enter_title">Enter title</string>
     <string name="enter_content">Enter content</string>
     <string name="alarm">Alarm</string>
+    <string name="save_warning">Content has been changed,do you want to save?</string>
+    <string name="save">Save</string>
+    <string name="discard">Discard</string>
 
 
     <!--Date Spinner-->

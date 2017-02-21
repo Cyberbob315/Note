@@ -11,7 +11,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.HomeActivity"
+        <activity
+            android:name=".activity.HomeActivity"
             android:configChanges="keyboardHidden|orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,18 +20,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <data android:scheme="example"
-                    android:host="nhannt" />
+                <action android:name="android.intent.action.VIEW" />
+
+                <data
+                    android:host="nhannt"
+                    android:scheme="example" />
             </intent-filter>
         </activity>
 
         <receiver android:name=".receiver.AlarmReceiver" />
 
-        <activity android:name=".activity.DetailActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"/>
-        <activity android:name=".activity.HostActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"/>
+        <activity
+            android:name=".activity.DetailActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity
+            android:name=".activity.HostActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
     </application>
 
 </manifest>
