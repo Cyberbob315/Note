@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
 import nhannt.note.R;
-import nhannt.note.listener.OnBackPressedListener;
+import nhannt.note.interfaces.OnBackPressedListener;
 
 public abstract class BaseActivity extends AppCompatActivity {
 

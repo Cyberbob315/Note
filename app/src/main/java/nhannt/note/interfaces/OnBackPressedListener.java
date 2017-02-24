@@ -1,4 +1,4 @@
-package nhannt.note.listener;
+package nhannt.note.interfaces;
 
 /**
  * Created by nhannt on 2/21/17.

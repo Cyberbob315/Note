@@ -49,7 +49,7 @@ import nhannt.note.adapter.ImageAdapter;
 import nhannt.note.database.NoteDatabase;
 import nhannt.note.database.dao.ImageHelper;
 import nhannt.note.database.dao.NoteHelper;
-import nhannt.note.listener.OnBackPressedListener;
+import nhannt.note.interfaces.OnBackPressedListener;
 import nhannt.note.model.Note;
 import nhannt.note.receiver.AlarmReceiver;
 import nhannt.note.utils.Common;

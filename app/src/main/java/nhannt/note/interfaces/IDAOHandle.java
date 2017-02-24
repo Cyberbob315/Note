@@ -1,4 +1,4 @@
-package nhannt.note.base;
+package nhannt.note.interfaces;
 
 import java.util.List;
 

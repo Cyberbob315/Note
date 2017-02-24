@@ -7,7 +7,7 @@ import android.database.Cursor;
 import java.util.ArrayList;
 import java.util.List;
 
-import nhannt.note.base.IDAOHandle;
+import nhannt.note.interfaces.IDAOHandle;
 import nhannt.note.database.NoteDatabase;
 
 /**
